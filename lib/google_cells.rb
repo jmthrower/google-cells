@@ -1,5 +1,6 @@
 require "google_cells/version"
 require "google_cells/client"
+require "google_cells/spreadsheet"
 
 module GoogleCells
   class << self

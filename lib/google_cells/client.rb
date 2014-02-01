@@ -1,3 +1,6 @@
+require 'google_cells'
+require 'google/api_client'
+
 module GoogleCells
 
   class Client
@@ -8,8 +11,8 @@ module GoogleCells
         config.key_secret)
 
       @client = Google::APIClient.new(
-        :application_name => config.application_name,
-        :application_version => config.application_version)
+        :application_name => 'GoogleCells App',
+        :application_version => '0.0.1')
 
       @client.authorization = Signet::OAuth2::Client.new(
         :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',

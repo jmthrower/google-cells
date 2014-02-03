@@ -6,7 +6,7 @@ describe GoogleCells::Spreadsheet do
   it { should respond_to(:id) }
   it { should respond_to(:updated_at) }
   it { should respond_to(:author) }
-  it { should respond_to(:url) }
+  it { should respond_to(:worksheets_uri) }
 
   describe "#list" do
 

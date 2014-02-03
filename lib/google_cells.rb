@@ -1,5 +1,6 @@
 require 'google/api_client'
 require "google_cells/version"
+require "google_cells/google_object"
 require "google_cells/spreadsheet"
 
 module GoogleCells

@@ -1,3 +1,5 @@
+require 'google_cells/worksheet'
+
 module GoogleCells
 
   class Spreadsheet < GoogleCells::GoogleObject
@@ -18,7 +20,6 @@ module GoogleCells
         doc = Nokogiri.parse(res.body)
         doc.css("feed > entry").each() do |entry|
           args = {
-            etag: entry.attribute('gd:etag'),
             title: entry.css("title").text,
             id: entry.css("id").text,
             updated_at: entry.css("updated").text,
@@ -46,7 +47,6 @@ module GoogleCells
       @worksheets = []
       doc.css("entry").each() do |entry|
         args = {
-          etag: entry.attribute('gd:etag'),
           title: entry.css("title").text,
           updated_at: entry.css("updated").text,
           cells_uri: entry.css(
@@ -57,6 +57,7 @@ module GoogleCells
             )[0]["href"],
           spreadsheet: self
         }
+        @worksheets << Worksheet.new(args)
       end
       return @worksheets
     end

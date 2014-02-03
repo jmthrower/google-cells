@@ -3,6 +3,7 @@ PATH
   specs:
     google-cells (0.0.1)
       google-api-client (~> 0.7, >= 0.7.1)
+      nokogiri (~> 1.6, >= 1.6.1)
 
 GEM
   remote: https://rubygems.org/
@@ -33,8 +34,11 @@ GEM
       multi_json (>= 1.5)
     launchy (2.4.2)
       addressable (~> 2.3)
+    mini_portile (0.5.2)
     multi_json (1.8.4)
     multipart-post (2.0.0)
+    nokogiri (1.6.1)
+      mini_portile (~> 0.5.0)
     rake (0.9.6)
     retriable (1.4.1)
     rspec (2.14.1)
@@ -64,6 +68,6 @@ DEPENDENCIES
   bundler (~> 1.5)
   google-cells!
   rake (~> 0)
-  rspec (~> 2.14.1)
-  vcr (~> 2.8.0)
-  webmock (~> 1.17.2)
+  rspec (~> 2.14, >= 2.14.1)
+  vcr (~> 2.8, >= 2.8.0)
+  webmock (~> 1.17, >= 1.17.2)

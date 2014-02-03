@@ -19,11 +19,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'google-api-client', '~> 0.7', '>= 0.7.1'
+  spec.add_dependency "nokogiri", "~> 1.6", ">= 1.6.1"
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency 'rake', '~> 0'
 
-  spec.add_development_dependency "rspec", "~> 2.14.1"
-  spec.add_development_dependency "vcr", "~> 2.8.0"
-  spec.add_development_dependency "webmock", "~> 1.17.2"
+  spec.add_development_dependency "rspec", '~> 2.14', ">= 2.14.1"
+  spec.add_development_dependency "vcr", "~> 2.8", '>= 2.8.0'
+  spec.add_development_dependency "webmock", "~> 1.17", ">= 1.17.2"
 end

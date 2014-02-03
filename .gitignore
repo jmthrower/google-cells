@@ -21,3 +21,6 @@ doc/
 *~
 *.swp
 *.swo
+
+# sensitive data
+spec/private_spec_helper.rb

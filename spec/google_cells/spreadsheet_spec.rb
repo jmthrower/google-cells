@@ -28,6 +28,12 @@ describe GoogleCells::Spreadsheet do
     end
   end
 
+  describe ".get" do
+
+    it "retrieves a google spreadsheet by id" do
+    end
+  end
+
   describe "#worksheets" do
 
     it "returns a list of Google worksheets" do

@@ -3,6 +3,7 @@ require 'google_cells/worksheet'
 module GoogleCells
 
   class Spreadsheet < GoogleCells::GoogleObject
+    extend Reader
 
     @permanent_attributes = [ :title, :id, :updated_at, :author, :worksheets_uri ]
     define_accessors
@@ -11,14 +12,7 @@ module GoogleCells
 
       def list
         spreadsheets = []
-        uri = 'https://spreadsheets.google.com/feeds/spreadsheets/private/full?'
-        GoogleCells.client.authorization.fetch_access_token!
-        res = GoogleCells.client.execute!(
-          :http_method => :get,
-          :uri => uri
-        ) 
-        doc = Nokogiri.parse(res.body)
-        doc.css("feed > entry").each() do |entry|
+        each_entry do |entry|
           args = {
             title: entry.css("title").text,
             id: entry.css("id").text,

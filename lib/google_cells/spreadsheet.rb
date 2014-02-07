@@ -33,14 +33,8 @@ module GoogleCells
 
     def worksheets
       return @worksheets if @worksheets
-      GoogleCells.client.authorization.fetch_access_token!
-      res = GoogleCells.client.execute!(
-        :http_method => :get,
-        :uri => worksheets_uri
-      ) 
-      doc = Nokogiri.parse(res.body)
       @worksheets = []
-      doc.css("entry").each() do |entry|
+      self.class.each_entry(worksheets_uri) do |entry|
         args = {
           title: entry.css("title").text,
           updated_at: entry.css("updated").text,
@@ -50,6 +44,8 @@ module GoogleCells
           lists_uri: entry.css(
             "link[rel='http://schemas.google.com/spreadsheets/2006#listfeed']"
             )[0]["href"],
+          row_count: entry.css("gs|rowCount").text.to_i,
+          col_count: entry.css("gs|colCount").text.to_i,
           spreadsheet: self
         }
         @worksheets << Worksheet.new(args)

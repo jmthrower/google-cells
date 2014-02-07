@@ -8,5 +8,7 @@ describe GoogleCells::Worksheet do
   it { should respond_to(:cells_uri) }
   it { should respond_to(:lists_uri) }
   it { should respond_to(:spreadsheet) }
+  it { should respond_to(:row_count) }
+  it { should respond_to(:col_count) }
 end
 

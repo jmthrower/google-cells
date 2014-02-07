@@ -31,6 +31,16 @@ describe GoogleCells::Spreadsheet do
   describe ".get" do
 
     it "retrieves a google spreadsheet by id" do
+      s = nil
+      VCR.use_cassette('google_cells/spreadsheet/get', :decode_compressed_response => true) do |c|
+        s = GoogleCells::Spreadsheet.get('myspreadsheetid')
+      end
+      s.class.should eq GoogleCells::Spreadsheet
+      s.title.should eq 'Pokemon'
+      s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/private/full/myspreadsheetid'
+      s.updated_at.should eq '2014-02-06T23:32:40.396Z'
+      s.author.name.should eq 'jessica'
+      s.author.email.should eq 'myemail@mydomain.com'
     end
   end
 

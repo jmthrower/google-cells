@@ -5,8 +5,8 @@ module GoogleCells
   module Reader
     include GoogleCells::Fetcher
 
-    def each_entry(url=nil, &block)
-      doc = raw(url)
+    def each_entry(url=nil, params={}, &block)
+      doc = raw(url, params)
       reader = Nokogiri::XML::Reader(doc)
       reader.each do |node|
         next unless node.name == 'entry' && node.node_type == 

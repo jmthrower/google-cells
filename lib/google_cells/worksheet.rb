@@ -5,7 +5,7 @@ module GoogleCells
     define_accessors
 
     def rows
-      GoogleCells::CellSelector.new(self)
+      GoogleCells::CellSelector::RowSelector.new(self)
     end
   end
 end

@@ -23,9 +23,9 @@ describe GoogleCells::Worksheet do
 
   describe "rows" do
 
-    it "returns a cell selector object" do
+    it "returns a row type cell selector object" do
       cs = worksheet.rows
-      cs.class.should eq GoogleCells::CellSelector
+      cs.class.should eq GoogleCells::CellSelector::RowSelector
     end
   end
 end

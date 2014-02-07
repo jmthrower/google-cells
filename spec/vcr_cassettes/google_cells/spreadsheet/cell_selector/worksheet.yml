@@ -1,0 +1,269 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://accounts.google.com/o/oauth2/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiI1NDQ1NTgxNDg0NTlAZGV2ZWxvcGVyLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJzY29wZSI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL2F1dGgvZHJpdmUgaHR0cHM6Ly9zcHJlYWRzaGVldHMuZ29vZ2xlLmNvbS9mZWVkcyIsImF1ZCI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi90b2tlbiIsImV4cCI6MTM5MTc3OTk4MCwiaWF0IjoxMzkxNzc5ODYwfQ.ipfkclticjyv3gR8ST1F5btam7S7xKkuFebT_CXmIxEXi7stIt9csjbZlP1sxV2TR0t-zYkgYUgsroEUiGKcTyvTgoBz3UF8VuczR7nhXH1ptn-FkF-ljRSIyCOechdYSANFzYelI2rMbr7DxLkIQ8FBHSj4tXWnzxxpjN7UbAs
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Fri, 01 Jan 1990 00:00:00 GMT
+      Date:
+      - Fri, 07 Feb 2014 13:31:59 GMT
+      Content-Type:
+      - application/json
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alternate-Protocol:
+      - 443:quic
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "access_token" : "<ACCESS_TOKEN>",
+          "token_type" : "Bearer",
+          "expires_in" : 3600
+        }
+    http_version: 
+  recorded_at: Fri, 07 Feb 2014 13:32:01 GMT
+- request:
+    method: get
+    uri: https://spreadsheets.google.com/feeds/spreadsheets/private/full
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - |-
+        GoogleCells App/0.0.1 google-api-ruby-client/0.7.1 Mac OS X/10.8.5
+         (gzip)
+      Accept-Encoding:
+      - gzip
+      Content-Type:
+      - ''
+      Authorization:
+      - Bearer <ACCESS_TOKEN>
+      Cache-Control:
+      - no-store
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/atom+xml; charset=UTF-8
+      Expires:
+      - Fri, 07 Feb 2014 13:32:00 GMT
+      Date:
+      - Fri, 07 Feb 2014 13:32:00 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Vary:
+      - Accept, X-GData-Authorization, GData-Version
+      Gdata-Version:
+      - '1.0'
+      Last-Modified:
+      - Fri, 07 Feb 2014 13:32:00 GMT
+      Transfer-Encoding:
+      - chunked
+      Set-Cookie:
+      - NID=67=RZkh49cPhZl5s7-3cKieYr41Mzz6sHCgeaVube6W86AfZmeN3Ko5bbjjixjw_Lg9uXEiodibS5ZPplp2l2ZNPxsX4z431JNJ5qrAjVhmU_yIpw_gcuJuXOsxJU8XvjlM;Domain=.google.com;Path=/;Expires=Sat,
+        09-Aug-2014 13:32:00 GMT;HttpOnly
+      P3p:
+      - CP="This is not a P3P policy! See http://www.google.com/support/accounts/bin/answer.py?hl=en&answer=151657
+        for more info."
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alternate-Protocol:
+      - 443:quic
+    body:
+      encoding: ASCII-8BIT
+      string: "<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom'
+        xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/'><id>https://spreadsheets.google.com/feeds/spreadsheets/private/full</id><updated>2014-02-07T13:32:00.320Z</updated><category
+        scheme='http://schemas.google.com/spreadsheets/2006' term='http://schemas.google.com/spreadsheets/2006#spreadsheet'/><title
+        type='text'>Available Spreadsheets - <SERVICE_ACCOUNT_EMAIL></title><link
+        rel='alternate' type='text/html' href='http://docs.google.com'/><link rel='http://schemas.google.com/g/2005#feed'
+        type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full'/><link
+        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full'/><openSearch:totalResults>2</openSearch:totalResults><openSearch:startIndex>1</openSearch:startIndex><entry><id>https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_ID></id><updated>2014-02-07T13:30:23.414Z</updated><category
+        scheme='http://schemas.google.com/spreadsheets/2006' term='http://schemas.google.com/spreadsheets/2006#spreadsheet'/><title
+        type='text'>Pokemon</title><content type='text'>Pokemon</content><link rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed'
+        type='application/atom+xml' href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full'/><link
+        rel='alternate' type='text/html' href='https://spreadsheets.google.com/ccc?key=<SPREADSHEET_KEY>'/><link
+        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_ID>'/><author><name>jessica</name><email><AUTHOR_EMAIL></email></author></entry><entry><id>https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_ID></id><updated>2014-02-04T16:22:22.724Z</updated><category
+        scheme='http://schemas.google.com/spreadsheets/2006' term='http://schemas.google.com/spreadsheets/2006#spreadsheet'/><title
+        type='text'>Businesses</title><content type='text'>Businesses</content><link
+        rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed' type='application/atom+xml'
+        href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full'/><link
+        rel='alternate' type='text/html' href='https://spreadsheets.google.com/ccc?key=<SPREADSHEET_KEY>'/><link
+        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_ID>'/><author><name>jessica</name><email><AUTHOR_EMAIL></email></author></entry></feed>"
+    http_version: 
+  recorded_at: Fri, 07 Feb 2014 13:32:01 GMT
+- request:
+    method: post
+    uri: https://accounts.google.com/o/oauth2/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiI1NDQ1NTgxNDg0NTlAZGV2ZWxvcGVyLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJzY29wZSI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL2F1dGgvZHJpdmUgaHR0cHM6Ly9zcHJlYWRzaGVldHMuZ29vZ2xlLmNvbS9mZWVkcyIsImF1ZCI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi90b2tlbiIsImV4cCI6MTM5MTc3OTk4MSwiaWF0IjoxMzkxNzc5ODYxfQ.Q-ct3bOVLRX2gd9SKEW0iMS5TA1pH6YlFfoXHnCmY24ZJYw7F5xOrPwPlSfE_cpUGBzgENQup4yQByv1PVH5h2SHMvubrL0KJSID5j6tTb2cVUG42Pz5bMKnG-32RjeP3sZbuedp9a0dz7mVYGnyvUuMq0XBqodndW2vLWhD_90
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Pragma:
+      - no-cache
+      Expires:
+      - Fri, 01 Jan 1990 00:00:00 GMT
+      Date:
+      - Fri, 07 Feb 2014 13:32:00 GMT
+      Content-Type:
+      - application/json
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alternate-Protocol:
+      - 443:quic
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "access_token" : "<ACCESS_TOKEN>",
+          "token_type" : "Bearer",
+          "expires_in" : 3600
+        }
+    http_version: 
+  recorded_at: Fri, 07 Feb 2014 13:32:02 GMT
+- request:
+    method: get
+    uri: https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - |-
+        GoogleCells App/0.0.1 google-api-ruby-client/0.7.1 Mac OS X/10.8.5
+         (gzip)
+      Accept-Encoding:
+      - gzip
+      Content-Type:
+      - ''
+      Authorization:
+      - Bearer <ACCESS_TOKEN>
+      Cache-Control:
+      - no-store
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/atom+xml; charset=UTF-8
+      Expires:
+      - Fri, 07 Feb 2014 13:32:00 GMT
+      Date:
+      - Fri, 07 Feb 2014 13:32:00 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Vary:
+      - Accept, X-GData-Authorization, GData-Version
+      Gdata-Version:
+      - '1.0'
+      Last-Modified:
+      - Fri, 07 Feb 2014 13:30:23 GMT
+      Transfer-Encoding:
+      - chunked
+      Set-Cookie:
+      - NID=67=Sc_5FN6GmRpCZTackKKPC8JNWeUhtqvm6tS8zKekXBw-2RJnqWKeMyFlsBvON-15B8iRQoHWYRUHFuygiz6QLVQRI8aeS7OlYW1rBhjWcRI0tzCBqgsQH3AkOjJZl7ZO;Domain=.google.com;Path=/;Expires=Sat,
+        09-Aug-2014 13:32:00 GMT;HttpOnly
+      P3p:
+      - CP="This is not a P3P policy! See http://www.google.com/support/accounts/bin/answer.py?hl=en&answer=151657
+        for more info."
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alternate-Protocol:
+      - 443:quic
+    body:
+      encoding: ASCII-8BIT
+      string: "<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom'
+        xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:gs='http://schemas.google.com/spreadsheets/2006'><id>https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full</id><updated>2014-02-07T13:30:23.414Z</updated><category
+        scheme='http://schemas.google.com/spreadsheets/2006' term='http://schemas.google.com/spreadsheets/2006#worksheet'/><title
+        type='text'>Pokemon</title><link rel='alternate' type='text/html' href='https://spreadsheets.google.com/ccc?key=<SPREADSHEET_ID>'/><link
+        rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full'/><link
+        rel='http://schemas.google.com/g/2005#post' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full'/><link
+        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full'/><author><name>jessica</name><email><AUTHOR_EMAIL></email></author><openSearch:totalResults>1</openSearch:totalResults><openSearch:startIndex>1</openSearch:startIndex><entry><id>https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full/od6</id><updated>2014-02-07T13:30:23.414Z</updated><category
+        scheme='http://schemas.google.com/spreadsheets/2006' term='http://schemas.google.com/spreadsheets/2006#worksheet'/><title
+        type='text'>Sheet 1</title><content type='text'>Sheet 1</content><link rel='http://schemas.google.com/spreadsheets/2006#listfeed'
+        type='application/atom+xml' href='https://spreadsheets.google.com/feeds/list/<SPREADSHEET_ID>/od6/private/full'/><link
+        rel='http://schemas.google.com/spreadsheets/2006#cellsfeed' type='application/atom+xml'
+        href='https://spreadsheets.google.com/feeds/cells/<SPREADSHEET_ID>/od6/private/full'/><link
+        rel='http://schemas.google.com/visualization/2008#visualizationApi' type='application/atom+xml'
+        href='https://spreadsheets.google.com/tq?key=<SPREADSHEET_ID>&amp;sheet=od6'/><link
+        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full/od6'/><link
+        rel='edit' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full/od6/dpceto650w'/><gs:rowCount>31</gs:rowCount><gs:colCount>57</gs:colCount></entry></feed>"
+    http_version: 
+  recorded_at: Fri, 07 Feb 2014 13:32:02 GMT
+recorded_with: VCR 2.8.0

@@ -1,5 +1,9 @@
+require File.dirname(__FILE__) + '/cell_selector/row_selector'
+
 module GoogleCells
   class CellSelector
+    include Reader
+
     attr_accessor :min_row, :max_row, :min_col, :max_col, :worksheet
 
     def initialize(ws)

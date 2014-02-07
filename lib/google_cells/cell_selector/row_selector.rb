@@ -18,6 +18,22 @@ module GoogleCells
         end
       end
 
+      def each
+        self.find_each(batch_size:worksheet.row_count){|c| yield c}
+      end
+
+      def from(num)
+        @min_row = num.to_i
+        self
+      end
+
+      def to(num)
+        @max_row = num.to_i
+        self
+      end
+
+      private
+
       def get_cells(start, last)
         cells = []
         each_entry(worksheet.cells_uri, 'return-empty' => true, 

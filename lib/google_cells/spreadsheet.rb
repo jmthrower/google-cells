@@ -7,7 +7,7 @@ module GoogleCells
     extend Reader
 
     @permanent_attributes = [ :title, :id, :updated_at, :author, :worksheets_uri,
-      :key ]
+      :key, :folder ]
     define_accessors
 
     class << self
@@ -32,10 +32,33 @@ module GoogleCells
         spreadsheet
       end
 
-      def copy(key)
+      def copy(key, opts={})
         url = "https://www.googleapis.com/drive/v2/files/#{key}/copy"
-        res = request(:post, url)
-        get(res.data['id'])
+        params = {}
+        if params[:folder_key]
+          params[:body] = {
+            'parents' => [
+            opts[:folder_key]
+          ]}.to_json,
+          params[:headers] = {'Content-Type' => 'application/json'}
+        end
+        res = request(:post, url, params)
+        s = get(res.data['id'])
+      end
+    end
+
+    def copy(opts={})
+      self.class.copy(self.key, opts)
+    end
+
+    def folders
+      return @folders if @folders
+      # for metadata/folder info, need google drive api record
+      uri = "https://www.googleapis.com/drive/v2/files/#{self.key}"
+      res = self.class.request(:get, uri)
+      data = JSON.parse(res.body)
+      @folders = data['parents'].map do |f|
+        Folder.new(spreadsheet: self, key:f['id'])
       end
     end
 

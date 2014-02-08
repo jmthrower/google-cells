@@ -22,6 +22,17 @@ describe GoogleCells::Spreadsheet do
         svals.should eq cvals
       end
     end
+
+    it "optionally assigns a folder key" do
+      VCR.use_cassette('google_cells/spreadsheet/copy/folder', 
+        :decode_compressed_response => true) do |c|
+        fkey = 'parentid'
+        s = GoogleCells::Spreadsheet.get('myspreadsheetkey')
+        c = GoogleCells::Spreadsheet.copy(s.key, folder_key:fkey)
+        c.folders.count.should eq 1
+        c.folders.first.key.should be
+      end
+    end
   end
 
   describe ".list" do
@@ -60,6 +71,20 @@ describe GoogleCells::Spreadsheet do
       s.updated_at.should eq '2014-02-06T23:32:40.396Z'
       s.author.name.should eq 'jessica'
       s.author.email.should eq 'myemail@mydomain.com'
+    end
+  end
+
+  describe "#folders" do
+
+    it "retrieves folder information for doc" do
+      VCR.use_cassette('google_cells/spreadsheet/folders', 
+        :decode_compressed_response => true) do |c|
+        s = GoogleCells::Spreadsheet.get('copiedspreadsheetkey')
+        s.folders.count.should eq 1
+        f = s.folders.first
+        f.class.should eq GoogleCells::Folder
+        f.key.should eq 'parentid'
+      end
     end
   end
 

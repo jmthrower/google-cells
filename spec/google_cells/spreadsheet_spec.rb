@@ -2,19 +2,34 @@ require 'spec_helper'
 
 describe GoogleCells::Spreadsheet do
 
+  let(:klass){subject.class}
+
   it { should respond_to(:title) }
   it { should respond_to(:id) }
   it { should respond_to(:updated_at) }
   it { should respond_to(:author) }
   it { should respond_to(:worksheets_uri) }
 
+  describe ".share" do
+
+    let(:body){{role:'owner',type:'user',value:'me@me.com'}}
+
+    it "creates a new permission for the passed args" do
+      klass.should_receive(:request).with(:post, "https://www.googleapis.com" + 
+        "/drive/v2/files/myspreadsheetid/permissions", {:body=>"{\"role\":\"" + 
+        "owner\",\"type\":\"user\",\"value\":\"me@me.com\"}", :url_params=>{},
+        :headers=>{"Content-Type"=>"application/json"}})
+      klass.share('myspreadsheetid', body)
+    end
+  end
+
   describe ".copy" do
 
     it "returns a new spreadsheet object" do
       VCR.use_cassette('google_cells/spreadsheet/copy', 
         :decode_compressed_response => true) do |c|
-        s = GoogleCells::Spreadsheet.get('SPREADSHEET_KEY')
-        c = GoogleCells::Spreadsheet.copy(s.key)
+        s = klass.get('SPREADSHEET_KEY')
+        c = klass.copy(s.key)
         s.key.should_not eq c.key
         s.title.should eq c.title
         svals = s.worksheets[0].rows.first.cells.map(&:value)
@@ -27,8 +42,8 @@ describe GoogleCells::Spreadsheet do
       VCR.use_cassette('google_cells/spreadsheet/copy/folder', 
         :decode_compressed_response => true) do |c|
         fkey = 'parentid'
-        s = GoogleCells::Spreadsheet.get('myspreadsheetkey')
-        c = GoogleCells::Spreadsheet.copy(s.key, folder_key:fkey)
+        s = klass.get('myspreadsheetkey')
+        c = klass.copy(s.key, folder_key:fkey)
         c.folders.count.should eq 1
         c.folders.first.key.should be
       end
@@ -41,7 +56,7 @@ describe GoogleCells::Spreadsheet do
       objs = nil
       VCR.use_cassette('google_cells/spreadsheet', 
         :decode_compressed_response => true) do |c|
-        objs = GoogleCells::Spreadsheet.list
+        objs = klass.list
       end
       objs.count.should eq 1
       s = objs.first
@@ -62,9 +77,9 @@ describe GoogleCells::Spreadsheet do
       s = nil
       VCR.use_cassette('google_cells/spreadsheet/get', 
         :decode_compressed_response => true) do |c|
-        s = GoogleCells::Spreadsheet.get('myspreadsheetid')
+        s = klass.get('myspreadsheetid')
       end
-      s.class.should eq GoogleCells::Spreadsheet
+      s.class.should eq klass
       s.title.should eq 'Pokemon'
       s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/' + 
         'private/full/myspreadsheetid'
@@ -79,7 +94,7 @@ describe GoogleCells::Spreadsheet do
     it "retrieves folder information for doc" do
       VCR.use_cassette('google_cells/spreadsheet/folders', 
         :decode_compressed_response => true) do |c|
-        s = GoogleCells::Spreadsheet.get('copiedspreadsheetkey')
+        s = klass.get('copiedspreadsheetkey')
         s.folders.count.should eq 1
         f = s.folders.first
         f.class.should eq GoogleCells::Folder
@@ -94,7 +109,7 @@ describe GoogleCells::Spreadsheet do
       spreadsheet = nil
       VCR.use_cassette('google_cells/spreadsheet', 
         :decode_compressed_response => true) do |c|
-        spreadsheet = GoogleCells::Spreadsheet.list.first
+        spreadsheet = klass.list.first
       end
       VCR.use_cassette('google_cells/worksheets', 
         :decode_compressed_response => true) do

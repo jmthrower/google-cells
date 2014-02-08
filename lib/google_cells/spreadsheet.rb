@@ -45,6 +45,30 @@ module GoogleCells
         res = request(:post, url, params)
         s = get(res.data['id'])
       end
+
+
+      def share(key, params)
+        body = {}
+        [:role, :type, :value].each do |sym|
+          body[sym.to_s] = params.delete(sym)
+        end
+        params[:body] = body.to_json
+
+        params[:url_params] = {}
+        params[:url_params]['sendNotificationEmails'] = params.delete(
+          :send_notification_emails) if params[:send_notification_emails]
+        params[:url_params]['emailMessage'] = params.delete(
+          :email_message) if params[:email_message]
+
+        params[:headers] = {'Content-Type' => 'application/json'}
+        url = "https://www.googleapis.com/drive/v2/files/#{key}/permissions"
+        res = request(:post, url, params)
+        true
+      end
+    end
+
+    def share(params)
+      self.class.share(self.key, params)
     end
 
     def copy(opts={})

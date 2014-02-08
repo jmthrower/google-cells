@@ -1,11 +1,12 @@
 require 'google_cells/worksheet'
+require 'json'
 
 module GoogleCells
 
   class Spreadsheet < GoogleCells::GoogleObject
     extend Reader
 
-    @permanent_attributes = [ :title, :id, :updated_at, :author, :worksheets_uri, 
+    @permanent_attributes = [ :title, :id, :updated_at, :author, :worksheets_uri,
       :key ]
     define_accessors
 
@@ -29,6 +30,12 @@ module GoogleCells
           break
         end
         spreadsheet
+      end
+
+      def copy(key)
+        url = "https://www.googleapis.com/drive/v2/files/#{key}/copy"
+        res = request(:post, url)
+        get(res.data['id'])
       end
     end
 

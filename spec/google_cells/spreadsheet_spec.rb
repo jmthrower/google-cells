@@ -8,6 +8,22 @@ describe GoogleCells::Spreadsheet do
   it { should respond_to(:author) }
   it { should respond_to(:worksheets_uri) }
 
+  describe ".copy" do
+
+    it "returns a new spreadsheet object" do
+      VCR.use_cassette('google_cells/spreadsheet/copy', 
+        :decode_compressed_response => true) do |c|
+        s = GoogleCells::Spreadsheet.get('SPREADSHEET_KEY')
+        c = GoogleCells::Spreadsheet.copy(s.key)
+        s.key.should_not eq c.key
+        s.title.should eq c.title
+        svals = s.worksheets[0].rows.first.cells.map(&:value)
+        cvals = c.worksheets[0].rows.first.cells.map(&:value)
+        svals.should eq cvals
+      end
+    end
+  end
+
   describe ".list" do
 
     it "returns a list of Google Spreadsheets" do

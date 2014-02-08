@@ -1,4 +1,6 @@
 require 'google/api_client'
+require 'nokogiri'
+
 require "google_cells/fetcher"
 require "google_cells/reader"
 require "google_cells/util"

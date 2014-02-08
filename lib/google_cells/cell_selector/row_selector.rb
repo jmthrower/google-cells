@@ -9,7 +9,7 @@ module GoogleCells
         size = (opts[:batch_size] || DEFAULT_BATCH_SIZE).to_i
         rnum = @min_row
         loop do
-          last = [rnum + size, worksheet.row_count].min
+          last = [rnum + size, @max_row].min
           break if rnum > last
           get_cells(rnum, last).each do |cells|
             yield Row.new(cells:cells, number:rnum, worksheet:worksheet)
@@ -24,7 +24,7 @@ module GoogleCells
 
       def all
         @rows = []
-        self.find_each(batch_size:worksheet.row_count){|r| @rows << r}
+        self.find_each(batch_size:@max_row - @min_row){|r| @rows << r}
         @rows
       end
 

@@ -13,7 +13,7 @@ module GoogleCells
     def request(method, url, params={})
       if params[:url_params] && !params[:url_params].empty?
         url << '?' unless url[-1] == "?"
-        url << params.to_a.map{|k,v| "#{k}=#{v}"}.join('&')
+        url << params[:url_params].to_a.map{|k,v| "#{k}=#{v}"}.join('&')
       end
       GoogleCells.client.authorization.fetch_access_token!
       GoogleCells.client.execute!(

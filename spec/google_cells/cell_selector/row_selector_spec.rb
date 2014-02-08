@@ -14,7 +14,7 @@ describe GoogleCells::CellSelector::RowSelector do
 
   describe "#find_each" do
     
-    it "iterates over rows specified in cell selector" do
+    it "iterates over all the rows" do
       count = 0
 
       VCR.use_cassette('google_cells/cell_selector/find_each', 
@@ -25,6 +25,22 @@ describe GoogleCells::CellSelector::RowSelector do
         end
       end
       count.should eq 31
+    end
+
+    it "iterates over rows specified in cell selector" do
+      count = 0
+
+      VCR.use_cassette('google_cells/cell_selector/find_each/selection', 
+        :decode_compressed_response => true) do |c|
+        s = GoogleCells::Spreadsheet.list.first
+        w = s.worksheets.first
+        rs = subject.from(5).to(10)
+        rs.find_each do |r|
+          count += 1
+          r.class.should eq GoogleCells::Row
+        end
+      end
+      count.should eq 6
     end
 
     context "optional batch sizes" do

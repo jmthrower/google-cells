@@ -45,7 +45,7 @@ EOS
         end
       end
 
-      @changed_cells = []
+      @changed_cells = {}
       true
     end
 

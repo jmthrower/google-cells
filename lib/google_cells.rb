@@ -1,6 +1,7 @@
 require 'google/api_client'
 require "google_cells/fetcher"
 require "google_cells/reader"
+require "google_cells/util"
 require "google_cells/google_object"
 require "google_cells/author"
 require "google_cells/cell"

@@ -7,9 +7,7 @@
       def define_accessors
         self.instance_eval do
           @permanent_attributes.each do |k|
-            k_eq = :"#{k}="
             define_method(k){ @values[k] }
-            define_method(k_eq){ |v| @values[k] = v }
           end
         end
       end
@@ -20,8 +18,12 @@
       self.class.permanent_attributes.each{|a| @values[a] = attribs[a]}
 
       extra = attribs.keys - self.class.permanent_attributes
-      if !extra.empty?
-        raise ArgumentError, "invalid attribute #{extra.join(', ')} passed to #{
+      extra.each do |a|
+        if self.respond_to?("#{a}=")
+          instance_variable_set("@#{a}".to_sym, attribs[a])
+          next
+        end
+        raise ArgumentError, "invalid attribute #{a} passed to #{
           self.class}"
       end
     end

@@ -6,16 +6,22 @@ module GoogleCells
 
     def raw(url=nil, params={})
       url ||= BASE_URL
-      if !params.empty?
+      res = request(:get, url, url_params: params)
+      res.body
+    end
+
+    def request(method, url, params={})
+      if params[:url_params] && !params[:url_params].empty?
         url << '?' unless url[-1] == "?"
         url << params.to_a.map{|k,v| "#{k}=#{v}"}.join('&')
       end
       GoogleCells.client.authorization.fetch_access_token!
-      res = GoogleCells.client.execute!(
-        :http_method => :get,
-        :uri => url
+      GoogleCells.client.execute!(
+        :http_method => method,
+        :uri => url,
+        :headers => params[:headers],
+        :body => params[:body]
       ) 
-      res.body
     end
   end
 end

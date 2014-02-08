@@ -12,9 +12,7 @@ describe GoogleCells::GoogleObject do
     it "automatically generates accessors for perm attribs" do
       o = TestObject.new
       o.should respond_to :name
-      o.should respond_to :name=
       o.should respond_to :email
-      o.should respond_to :email=
     end
   end
 end

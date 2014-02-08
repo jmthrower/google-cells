@@ -88,20 +88,5 @@ describe GoogleCells::CellSelector::RowSelector do
       subject.from(subject.max_row).should eq subject
     end
   end
-
-=begin
-  spreadsheet.rows.each do |r|
-    r.cells.each do |cell|
-      p r
-    end
-  end
-
-  spreadsheet.rows.from(1).to(4).each do |r|
-  end
-  spreadsheet.rows.all
-  spreadsheet.columns.all
-  spreadsheet.cells.all
-  spreadsheet.columns.each do |c|
-=end
 end
 

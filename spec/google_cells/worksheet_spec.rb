@@ -28,5 +28,44 @@ describe GoogleCells::Worksheet do
       cs.class.should eq GoogleCells::CellSelector::RowSelector
     end
   end
+
+  describe "#save" do
+
+    it "tracks all changed cells" do
+      VCR.use_cassette('google_cells/spreadsheet/list', 
+        :decode_compressed_response => true) do |c|
+        s = GoogleCells::Spreadsheet.list.first
+        w = s.worksheets.first
+        c = GoogleCells::Cell.new(:worksheet => w)
+        w.instance_variable_get(:@changed_cells).should_not be
+        c.input_value = "a different name"
+        w.instance_variable_get(:@changed_cells).should eq ({c.title => c})
+      end
+    end
+
+    it "saves cells" do
+      VCR.use_cassette('google_cells/worksheet/save', 
+        :decode_compressed_response => true) do |c|
+        s = GoogleCells::Spreadsheet.list.first
+        w = s.worksheets.first
+
+        c = GoogleCells::Cell.new(
+          :title=>"A1", 
+          :id=>"https://spreadsheets.google.com/feeds/cells/'+
+            't-9Bgdk4FJIM8BDqIDHpBCw/od6/private/full/R1C1", 
+          :value=>"", 
+          :numeric_value=>nil, 
+          :row=>1, 
+          :col=>1, 
+          :edit_url=>"https://spreadsheets.google.com/feeds/cells/'+
+            't-9Bgdk4FJIM8BDqIDHpBCw/od6/private/full/R1C1/bzwjv",
+          :input_value=> "a new name",
+          :worksheet => w
+        )
+        w.track_changes(c)
+        w.save!.should be
+      end
+    end
+  end
 end
 

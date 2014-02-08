@@ -19,7 +19,17 @@ module GoogleCells
       end
 
       def each
-        self.find_each(batch_size:worksheet.row_count){|c| yield c}
+        all.each{|c| yield c}
+      end
+
+      def all
+        @rows = []
+        self.find_each(batch_size:worksheet.row_count){|r| @rows << r}
+        @rows
+      end
+
+      def first
+        all.first
       end
 
       def from(num)
@@ -36,17 +46,20 @@ module GoogleCells
 
       def get_cells(start, last)
         cells = []
-        each_entry(worksheet.cells_uri, 'return-empty' => true, 
+        each_entry(worksheet.cells_uri, 'return-empty' => 'true', 
           'min-row' => start, 'max-row' => last) do |entry|
-
           gscell = entry.css("gs|cell")[0]
-          cell = Cell.new
-          cell.id = entry.css("id").text
-          cell.value = gscell.inner_text
-          cell.row = gscell["row"].to_i()
-          cell.col = gscell["col"].to_i()
-          cell.edit_url = entry.css("link[rel='edit']")[0]["href"]
-
+          cell = Cell.new(
+            id: entry.css("id").text,
+            title: entry.css("title").text,
+            value: gscell.inner_text,
+            row: gscell["row"].to_i,
+            col: gscell["col"].to_i,
+            edit_url: entry.css("link[rel='edit']")[0]["href"],
+            input_value: gscell["inputValue"],
+            numeric_value: gscell["numericValue"],
+            worksheet: self.worksheet
+          )
           cells[cell.row - start] ||= []
           cells[cell.row - start][cell.col - 1] = cell
         end

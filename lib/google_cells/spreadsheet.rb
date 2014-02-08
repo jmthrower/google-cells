@@ -5,7 +5,8 @@ module GoogleCells
   class Spreadsheet < GoogleCells::GoogleObject
     extend Reader
 
-    @permanent_attributes = [ :title, :id, :updated_at, :author, :worksheets_uri ]
+    @permanent_attributes = [ :title, :id, :updated_at, :author, :worksheets_uri, 
+      :key ]
     define_accessors
 
     class << self
@@ -24,7 +25,7 @@ module GoogleCells
         url = "https://spreadsheets.google.com/feeds/worksheets/#{key}/private/full"
         each_entry do |entry|
           args = parse_from_entry(entry)
-          spreadsheet = Spreadsheet.new(args)
+          spreadsheet = Spreadsheet.new(args.merge(key:key))
           break
         end
         spreadsheet

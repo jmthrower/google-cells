@@ -64,6 +64,7 @@ describe GoogleCells::Spreadsheet do
       s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/' + 
         'private/full/myspreadsheetid'
       s.updated_at.should eq '2014-01-31T20:37:14.168Z'
+      s.key.should eq 'myspreadsheetkey'
 
       a = s.author
       a.name.should eq 'jessica'

@@ -123,8 +123,11 @@ module GoogleCells
     private
 
     def self.parse_from_entry(entry)
+      key = entry.css("link").select{|el| el['rel'] == 'alternate'}.
+        first['href'][/key=.+/][4..-1]
       { title: entry.css("title").text,
         id: entry.css("id").text,
+        key: key,
         updated_at: entry.css("updated").text,
         author: Author.new(
           name: entry.css("author/name").text,

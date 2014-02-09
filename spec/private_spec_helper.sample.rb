@@ -16,6 +16,8 @@ VCR.configure do |c|
   c.filter_sensitive_data('<COPIED_SPREADSHEET_KEY>') { 'copiedspreadsheetkey' }
 
   c.filter_sensitive_data('<PARENT_KEY>') { 'parentid' }
+  c.filter_sensitive_data('<FOLDER_KEY>') { 
+    'folderid' }
 
   c.before_record do |i|
     body = i.response.body

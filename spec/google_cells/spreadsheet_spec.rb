@@ -89,6 +89,21 @@ describe GoogleCells::Spreadsheet do
     end
   end
 
+  describe "#enfold" do
+
+    it "adds a folder for self" do
+      VCR.use_cassette('google_cells/spreadsheet/enfold', 
+        :decode_compressed_response => true) do |c|
+        s = klass.get('myspreadsheetid')
+        s.instance_variable_set(:@folders, [])
+        s.enfold('folderid').should be
+        folders = s.instance_variable_get(:@folders)
+        folders.count.should eq 1
+        folders.first.key.should eq 'folderid'
+      end
+    end
+  end
+
   describe "#folders" do
 
     it "retrieves folder information for doc" do

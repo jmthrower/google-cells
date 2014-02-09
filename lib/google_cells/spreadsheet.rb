@@ -7,7 +7,7 @@ module GoogleCells
     extend Reader
 
     @permanent_attributes = [ :title, :id, :updated_at, :author, :worksheets_uri,
-      :key, :folder ]
+      :key ]
     define_accessors
 
     class << self
@@ -56,7 +56,8 @@ module GoogleCells
 
         params[:url_params] = {}
         params[:url_params]['sendNotificationEmails'] = params.delete(
-          :send_notification_emails) if params[:send_notification_emails]
+          :send_notification_emails) if !params[:send_notification_emails].
+          to_s.empty?
         params[:url_params]['emailMessage'] = params.delete(
           :email_message) if params[:email_message]
 
@@ -74,6 +75,16 @@ module GoogleCells
     def copy(opts={})
       self.class.copy(self.key, opts)
     end
+    
+    def enfold(folder_key)
+      return true if @folders && @folders.select{|f| f.key == folder_key}.first
+      uri = "https://www.googleapis.com/drive/v2/files/#{folder_key}/children"
+      body = {'id' => self.key}.to_json
+      res = self.class.request(:post, uri, :body => body, :headers => 
+        {'Content-Type' => 'application/json'})
+      @folders << Folder.new(spreadsheet:self, key:folder_key) if @folders
+      true
+    end
 
     def folders
       return @folders if @folders
@@ -81,6 +92,7 @@ module GoogleCells
       uri = "https://www.googleapis.com/drive/v2/files/#{self.key}"
       res = self.class.request(:get, uri)
       data = JSON.parse(res.body)
+      return @folders = [] if data['parents'].nil?
       @folders = data['parents'].map do |f|
         Folder.new(spreadsheet: self, key:f['id'])
       end

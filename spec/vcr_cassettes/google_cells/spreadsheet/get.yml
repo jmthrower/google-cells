@@ -5,7 +5,7 @@ http_interactions:
     uri: https://accounts.google.com/o/oauth2/token
     body:
       encoding: ASCII-8BIT
-      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiI1NDQ1NTgxNDg0NTlAZGV2ZWxvcGVyLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJzY29wZSI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL2F1dGgvZHJpdmUgaHR0cHM6Ly9zcHJlYWRzaGVldHMuZ29vZ2xlLmNvbS9mZWVkcyIsImF1ZCI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi90b2tlbiIsImV4cCI6MTM5MTczMTE2OSwiaWF0IjoxMzkxNzMxMDQ5fQ.hoOJX1aVrTe4I0Ma5fypdC9YKix97I3hOxnaeHMrtVPtaOEXHUkPhXIMH2iRvuGDPpPaf8VPN3vTKJboxegJnrcaXVX3BLlL_pCd6y286vVz7LJ2DVwwPyTjtROzDVXLdkl1SAA5oVng2us23Pbg7RaRgfKuAHcpU4WouPFk-5I
+      string: grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiI1NDQ1NTgxNDg0NTlAZGV2ZWxvcGVyLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJzY29wZSI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL2F1dGgvZHJpdmUgaHR0cHM6Ly9zcHJlYWRzaGVldHMuZ29vZ2xlLmNvbS9mZWVkcyIsImF1ZCI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbS9vL29hdXRoMi90b2tlbiIsImV4cCI6MTM5MjU4OTk2MCwiaWF0IjoxMzkyNTg5ODQwfQ.Sbb3gducm7YuOzeBbCST71GuiGEcUvHelNDdhKkKT6mh7K484cBPmLXGKxJsuuubD42d4L_C6oij_0Hzmm3g7MTNxeaAePqoTofrsebldarnZNuBMvgm7Z2dudeVDnKdK8mQ9BqRStyy0D9VS2WQCTfLwN-3iz4HjHgJvyekikU
     headers:
       Cache-Control:
       - no-store
@@ -29,7 +29,7 @@ http_interactions:
       Expires:
       - Fri, 01 Jan 1990 00:00:00 GMT
       Date:
-      - Thu, 06 Feb 2014 23:58:29 GMT
+      - Sun, 16 Feb 2014 22:31:31 GMT
       Content-Type:
       - application/json
       X-Content-Type-Options:
@@ -53,10 +53,10 @@ http_interactions:
           "expires_in" : 3600
         }
     http_version: 
-  recorded_at: Thu, 06 Feb 2014 23:58:29 GMT
+  recorded_at: Sun, 16 Feb 2014 22:31:40 GMT
 - request:
     method: get
-    uri: https://spreadsheets.google.com/feeds/spreadsheets/private/full
+    uri: https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_KEY>
     body:
       encoding: UTF-8
       string: ''
@@ -83,9 +83,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Thu, 06 Feb 2014 23:58:29 GMT
+      - Sun, 16 Feb 2014 22:31:32 GMT
       Date:
-      - Thu, 06 Feb 2014 23:58:29 GMT
+      - Sun, 16 Feb 2014 22:31:32 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -93,12 +93,12 @@ http_interactions:
       Gdata-Version:
       - '1.0'
       Last-Modified:
-      - Thu, 06 Feb 2014 23:58:29 GMT
+      - Sun, 16 Feb 2014 15:45:40 GMT
       Transfer-Encoding:
       - chunked
       Set-Cookie:
-      - NID=67=HE3TC70k2JN3a0FQKPkrFRznO7fsGs_HGBQr0CujgATWwBH8flKr00P6rE8sGQGcB3x7KU6y_1yj3J_Wp4JIGDooS1f3C7lDKs5-WL6i-pLgHs59FjHikxJ78wLgBNql;Domain=.google.com;Path=/;Expires=Fri,
-        08-Aug-2014 23:58:29 GMT;HttpOnly
+      - NID=67=kT9tWR6CztEbJYAo755bt_jl8aLsk-2GHmSOZrR3c0OG4Wg7dm7JneKVFPCUH5yR14ODD1oWzvBy0ilGMyw2IpkVcaTs7aZVPVBJqZB9Kmug_y4eZnIyy9yusL3qq-lg;Domain=.google.com;Path=/;Expires=Mon,
+        18-Aug-2014 22:31:32 GMT;HttpOnly
       P3p:
       - CP="This is not a P3P policy! See http://www.google.com/support/accounts/bin/answer.py?hl=en&answer=151657
         for more info."
@@ -114,24 +114,13 @@ http_interactions:
       - 443:quic
     body:
       encoding: ASCII-8BIT
-      string: "<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom'
-        xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/'><id>https://spreadsheets.google.com/feeds/spreadsheets/private/full</id><updated>2014-02-06T23:58:29.573Z</updated><category
+      string: "<?xml version='1.0' encoding='UTF-8'?><entry xmlns='http://www.w3.org/2005/Atom'><id>https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_KEY></id><updated>2014-02-16T15:45:40.723Z</updated><category
         scheme='http://schemas.google.com/spreadsheets/2006' term='http://schemas.google.com/spreadsheets/2006#spreadsheet'/><title
-        type='text'>Available Spreadsheets - <SERVICE_ACCOUNT_EMAIL></title><link
-        rel='alternate' type='text/html' href='http://docs.google.com'/><link rel='http://schemas.google.com/g/2005#feed'
-        type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full'/><link
-        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full'/><openSearch:totalResults>2</openSearch:totalResults><openSearch:startIndex>1</openSearch:startIndex><entry><id>https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_ID></id><updated>2014-02-06T23:32:40.396Z</updated><category
-        scheme='http://schemas.google.com/spreadsheets/2006' term='http://schemas.google.com/spreadsheets/2006#spreadsheet'/><title
-        type='text'>Pokemon</title><content type='text'>Pokemon</content><link rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed'
-        type='application/atom+xml' href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full'/><link
+        type='text'>Contacts</title><content type='text'>Contacts
+        - Bad Facet Type</content><link rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed'
+        type='application/atom+xml' href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_KEY>/private/full'/><link
         rel='alternate' type='text/html' href='https://spreadsheets.google.com/ccc?key=<SPREADSHEET_KEY>'/><link
-        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_ID>'/><author><name>jessica</name><email><AUTHOR_EMAIL></email></author></entry><entry><id>https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_ID></id><updated>2014-02-04T16:22:22.724Z</updated><category
-        scheme='http://schemas.google.com/spreadsheets/2006' term='http://schemas.google.com/spreadsheets/2006#spreadsheet'/><title
-        type='text'>Businesses</title><content type='text'>Businesses</content><link
-        rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed' type='application/atom+xml'
-        href='https://spreadsheets.google.com/feeds/worksheets/<SPREADSHEET_ID>/private/full'/><link
-        rel='alternate' type='text/html' href='https://spreadsheets.google.com/ccc?key=<SPREADSHEET_KEY>'/><link
-        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_ID>'/><author><name>jessica</name><email><AUTHOR_EMAIL></email></author></entry></feed>"
+        rel='self' type='application/atom+xml' href='https://spreadsheets.google.com/feeds/spreadsheets/private/full/<SPREADSHEET_KEY>'/><author><name>544558148459</name><email><SERVICE_ACCOUNT_EMAIL></email></author></entry>"
     http_version: 
-  recorded_at: Thu, 06 Feb 2014 23:58:29 GMT
+  recorded_at: Sun, 16 Feb 2014 22:31:41 GMT
 recorded_with: VCR 2.8.0

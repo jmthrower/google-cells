@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    google-cells (0.0.1)
+    google-cells (0.0.2)
       google-api-client (~> 0.7, >= 0.7.1)
       nokogiri (~> 1.6, >= 1.6.1)
 

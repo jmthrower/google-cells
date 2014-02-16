@@ -22,14 +22,10 @@ module GoogleCells
       end
 
       def get(key)
-        spreadsheet = nil
-        url = "https://spreadsheets.google.com/feeds/worksheets/#{key}/private/full"
-        each_entry do |entry|
-          args = parse_from_entry(entry)
-          spreadsheet = Spreadsheet.new(args.merge(key:key))
-          break
-        end
-        spreadsheet
+        url = "https://spreadsheets.google.com/feeds/spreadsheets/private/full/#{key}"
+        res = request(:get, url)
+        args = parse_from_entry(Nokogiri.parse(res.body), key)
+        Spreadsheet.new(args)
       end
 
       def copy(key, opts={})
@@ -122,19 +118,21 @@ module GoogleCells
 
     private
 
-    def self.parse_from_entry(entry)
-      key = entry.css("link").select{|el| el['rel'] == 'alternate'}.
+    def self.parse_from_entry(entry, key=nil)
+      key ||= entry.css("link").select{|el| el['rel'] == 'alternate'}.
         first['href'][/key=.+/][4..-1]
-      { title: entry.css("title").text,
-        id: entry.css("id").text,
+      id = "https://spreadsheets.google.com/feeds/spreadsheets/private/full/#{
+        key}"
+      { title: entry.css("title").first.text,
+        id: id,
         key: key,
-        updated_at: entry.css("updated").text,
+        updated_at: entry.css("updated").first.text,
         author: Author.new(
-          name: entry.css("author/name").text,
-          email: entry.css("author/email").text
+          name: entry.css("author/name").first.text,
+          email: entry.css("author/email").first.text
         ),
-        worksheets_uri: entry.css("link[rel='http://schemas.google.com/spreadsheets" + 
-          "/2006#worksheetsfeed']")[0]["href"]
+        worksheets_uri: "https://spreadsheets.google.com/feeds/worksheets/#{
+          key}/private/full"
       }
     end
   end

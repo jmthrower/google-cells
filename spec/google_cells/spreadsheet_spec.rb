@@ -16,10 +16,10 @@ describe GoogleCells::Spreadsheet do
 
     it "creates a new permission for the passed args" do
       klass.should_receive(:request).with(:post, "https://www.googleapis.com" + 
-        "/drive/v2/files/myspreadsheetid/permissions", {:body=>"{\"role\":\"" + 
+        "/drive/v2/files/myspreadsheetkey/permissions", {:body=>"{\"role\":\"" + 
         "owner\",\"type\":\"user\",\"value\":\"me@me.com\"}", :url_params=>{},
         :headers=>{"Content-Type"=>"application/json"}})
-      klass.share('myspreadsheetid', body)
+      klass.share('myspreadsheetkey', body)
     end
   end
 
@@ -28,7 +28,7 @@ describe GoogleCells::Spreadsheet do
     it "returns a new spreadsheet object" do
       VCR.use_cassette('google_cells/spreadsheet/copy', 
         :decode_compressed_response => true) do |c|
-        s = klass.get('SPREADSHEET_KEY')
+        s = GoogleCells::Spreadsheet.list.first
         c = klass.copy(s.key)
         s.key.should_not eq c.key
         s.title.should eq c.title
@@ -42,7 +42,7 @@ describe GoogleCells::Spreadsheet do
       VCR.use_cassette('google_cells/spreadsheet/copy/folder', 
         :decode_compressed_response => true) do |c|
         fkey = 'parentid'
-        s = klass.get('myspreadsheetkey')
+        s = GoogleCells::Spreadsheet.list.first
         c = klass.copy(s.key, folder_key:fkey)
         c.folders.count.should eq 1
         c.folders.first.key.should be
@@ -62,7 +62,7 @@ describe GoogleCells::Spreadsheet do
       s = objs.first
       s.title.should eq "Businesses"
       s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/' + 
-        'private/full/myspreadsheetid'
+        'private/full/myspreadsheetkey'
       s.updated_at.should eq '2014-01-31T20:37:14.168Z'
       s.key.should eq 'myspreadsheetkey'
 
@@ -78,15 +78,15 @@ describe GoogleCells::Spreadsheet do
       s = nil
       VCR.use_cassette('google_cells/spreadsheet/get', 
         :decode_compressed_response => true) do |c|
-        s = klass.get('myspreadsheetid')
+        s = klass.get('myspreadsheetkey')
       end
       s.class.should eq klass
-      s.title.should eq 'Pokemon'
+      s.title.should eq 'Contacts'
       s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/' + 
-        'private/full/myspreadsheetid'
-      s.updated_at.should eq '2014-02-06T23:32:40.396Z'
-      s.author.name.should eq 'jessica'
-      s.author.email.should eq 'myemail@mydomain.com'
+        'private/full/myspreadsheetkey'
+      s.updated_at.should eq '2014-02-16T15:45:40.723Z'
+      s.author.name.should eq '544558148459'
+      s.author.email.should eq 'mysvcaccount@gmail.com'
     end
   end
 
@@ -95,7 +95,7 @@ describe GoogleCells::Spreadsheet do
     it "adds a folder for self" do
       VCR.use_cassette('google_cells/spreadsheet/enfold', 
         :decode_compressed_response => true) do |c|
-        s = klass.get('myspreadsheetid')
+        s = GoogleCells::Spreadsheet.list.first
         s.instance_variable_set(:@folders, [])
         s.enfold('folderid').should be
         folders = s.instance_variable_get(:@folders)
@@ -110,7 +110,7 @@ describe GoogleCells::Spreadsheet do
     it "retrieves folder information for doc" do
       VCR.use_cassette('google_cells/spreadsheet/folders', 
         :decode_compressed_response => true) do |c|
-        s = klass.get('copiedspreadsheetkey')
+        s = GoogleCells::Spreadsheet.list.first
         s.folders.count.should eq 1
         f = s.folders.first
         f.class.should eq GoogleCells::Folder
@@ -136,9 +136,9 @@ describe GoogleCells::Spreadsheet do
       w.title.should eq 'Businesses'
       w.updated_at.should eq '2014-01-31T20:37:14.168Z'
       w.cells_uri.should eq 'https://spreadsheets.google.com/feeds/cells/' +
-        'myspreadsheetid/od6/private/full'
+        'myspreadsheetkey/od6/private/full'
       w.lists_uri.should eq 'https://spreadsheets.google.com/feeds/list/' + 
-        'myspreadsheetid/od6/private/full'
+        'myspreadsheetkey/od6/private/full'
       w.row_count.should eq 100
       w.col_count.should eq 23
       w.spreadsheet.should eq spreadsheet

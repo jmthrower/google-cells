@@ -31,17 +31,14 @@ module GoogleCells
       def copy(key, opts={})
         url = "https://www.googleapis.com/drive/v2/files/#{key}/copy"
         params = {}
-        if params[:folder_key]
-          params[:body] = {
-            'parents' => [
-            opts[:folder_key]
-          ]}.to_json,
+        if !opts[:writers_can_share].to_s.empty?
+          params[:body] = {'writersCanShare' => opts.delete(:writers_can_share)
+            }.to_json
           params[:headers] = {'Content-Type' => 'application/json'}
         end
         res = request(:post, url, params)
         s = get(res.data['id'])
       end
-
 
       def share(key, params)
         body = {}

@@ -25,25 +25,25 @@ module GoogleCells
 
     self.client = Google::APIClient.new(
       :application_name => 'GoogleCells App',
-      :application_version => '0.0.1')
-
-    opts = if config.refresh_token
-      auth_refresh_token_opts
+      :application_version => '0.0.3'
+    )
+    if config.path_to_credentials_file
+      config_from_file
+    elsif config.client_id
+      config_web_application
     else
-      auth_service_account_opts
-    end.merge({
-      token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-      audience: 'https://accounts.google.com/o/oauth2/token',
-      scope: ['https://www.googleapis.com/auth/drive',
-        'https://spreadsheets.google.com/feeds'],
-    })
+      config_service_account
+    end
+    client.authorization.scope = ['https://www.googleapis.com/auth/drive',
+      'https://spreadsheets.google.com/feeds']
+    client.authorization.token_credential_uri = 'https://accounts.google.com/o/oauth2/token'
 
-    client.authorization = Signet::OAuth2::Client.new(opts)
     config
   end
 
   class Configuration
-    attr_accessor :service_account_email, :key_secret, :key_file, :refresh_token
+    attr_accessor :service_account_email, :key_secret, :key_file, :client_id, 
+      :client_secret, :path_to_credentials_file
 
     def initialize
       @key_secret = 'notasecret'
@@ -55,15 +55,25 @@ module GoogleCells
 
   private
 
-  def self.auth_refresh_token_opts
-    {refresh_token: config.refresh_token}
+  def self.config_web_application
+    client.authorization.client_id = config.client_id
+    client.authorization.client_secret = config.client_secret
   end
 
-  def self.auth_service_account_opts
+  def self.config_service_account
     key = Google::APIClient::KeyUtils.load_from_pkcs12(config.key_file, 
       config.key_secret)
-
-    { issuer: config.service_account_email,
+    opts = { issuer: config.service_account_email,
       signing_key: key }
+
+    client.authorization = Signet::OAuth2::Client.new(opts)
+    client.authorization.audience = 'https://accounts.google.com/o/oauth2/token'
+  end
+
+  def self.config_from_file
+    flow = Google::APIClient::FileStorage.new(
+      :path => config.path_to_credentials_file
+    )
+    client.authorization = flow.authorize
   end
 end

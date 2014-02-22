@@ -21,6 +21,8 @@ module GoogleCells
         spreadsheets
       end
 
+      alias_method :all, :list
+
       def get(key)
         url = "https://spreadsheets.google.com/feeds/spreadsheets/private/full/#{key}"
         res = request(:get, url)

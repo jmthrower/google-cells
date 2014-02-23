@@ -4,10 +4,10 @@ require 'json'
 module GoogleCells
 
   class Spreadsheet < GoogleCells::GoogleObject
+    extend UrlHelper
     extend Reader
 
-    @permanent_attributes = [ :title, :id, :updated_at, :author, :worksheets_uri,
-      :key ]
+    @permanent_attributes = [ :title, :updated_at, :author, :key ]
     define_accessors
 
     class << self
@@ -24,8 +24,7 @@ module GoogleCells
       alias_method :all, :list
 
       def get(key)
-        url = "https://spreadsheets.google.com/feeds/spreadsheets/private/full/#{key}"
-        res = request(:get, url)
+        res = request(:get, worksheets_uri(key))
         args = parse_from_entry(Nokogiri.parse(res.body), key)
         Spreadsheet.new(args)
       end
@@ -120,19 +119,16 @@ module GoogleCells
     def self.parse_from_entry(entry, key=nil)
       key ||= entry.css("link").select{|el| el['rel'] == 'alternate'}.
         first['href'][/key=.+/][4..-1]
-      id = "https://spreadsheets.google.com/feeds/spreadsheets/private/full/#{
-        key}"
       { title: entry.css("title").first.text,
-        id: id,
         key: key,
         updated_at: entry.css("updated").first.text,
         author: Author.new(
           name: entry.css("author/name").first.text,
           email: entry.css("author/email").first.text
-        ),
-        worksheets_uri: "https://spreadsheets.google.com/feeds/worksheets/#{
-          key}/private/full"
+        )
       }
     end
+
+    def worksheets_uri; self.class.worksheets_uri(key); end
   end
 end

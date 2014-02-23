@@ -5,10 +5,9 @@ describe GoogleCells::Spreadsheet do
   let(:klass){subject.class}
 
   it { should respond_to(:title) }
-  it { should respond_to(:id) }
+  it { should respond_to(:key) }
   it { should respond_to(:updated_at) }
   it { should respond_to(:author) }
-  it { should respond_to(:worksheets_uri) }
 
   describe ".share" do
 
@@ -61,8 +60,6 @@ describe GoogleCells::Spreadsheet do
       objs.count.should eq 1
       s = objs.first
       s.title.should eq "Businesses"
-      s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/' + 
-        'private/full/myspreadsheetkey'
       s.updated_at.should eq '2014-01-31T20:37:14.168Z'
       s.key.should eq 'myspreadsheetkey'
 
@@ -82,8 +79,6 @@ describe GoogleCells::Spreadsheet do
       end
       s.class.should eq klass
       s.title.should eq 'Contacts'
-      s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/' + 
-        'private/full/myspreadsheetkey'
       s.updated_at.should eq '2014-02-16T15:45:40.723Z'
       s.author.name.should eq '544558148459'
       s.author.email.should eq 'mysvcaccount@gmail.com'

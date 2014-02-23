@@ -5,10 +5,16 @@ require 'vcr'
 
 require File.dirname(__FILE__) + '/../lib/google_cells'
 
+WebMock.disable_net_connect!
+
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr_cassettes'
+  c.default_cassette_options = { 
+    :match_requests_on =>  [:method, :uri],
+    :decode_compressed_response => true,
+    :allow_playback_repeats => true
+  }
   c.hook_into :webmock
-  c.ignore_request { |req| p req.uri['auth'] }
 end
 
 #

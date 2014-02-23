@@ -3,18 +3,13 @@ require 'spec_helper'
 describe GoogleCells::UrlHelper do
 
   class TestClass
-    include GoogleCells::UrlHelper
-    attr_accessor :key
-
-    def initialize(key)
-      @key = key
-    end
+    extend GoogleCells::UrlHelper
   end
 
-  subject do 
-    s = TestClass.new("12345")
-  end
+  subject{ TestClass }
 
-  its(:worksheets_uri){ should eq "https://spreadsheets.google.com/feeds/" + 
-    "worksheets/12345/private/full"}
+  it "returns worksheets uri" do
+    subject.worksheets_uri('12345').should eq "https://spreadsheets.google."+
+      "com/feeds/worksheets/12345/private/full"
+  end
 end

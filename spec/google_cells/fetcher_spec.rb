@@ -11,7 +11,7 @@ describe GoogleCells::Fetcher do
   describe "#raw" do
     
     it "returns the raw xml body of an http GET response" do
-      VCR.use_cassette('google_cells/fetcher', :decode_compressed_response => true) do |c|
+      VCR.use_cassette('google_cells/fetcher') do |c|
         doc = object.raw
         doc.should_not be_empty
         Nokogiri::XML(doc).errors.should be_empty

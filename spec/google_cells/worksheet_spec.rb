@@ -13,8 +13,7 @@ describe GoogleCells::Worksheet do
   
   let(:worksheet) do 
     w = nil
-    VCR.use_cassette('google_cells/spreadsheet/list', 
-      :decode_compressed_response => true) do |c|
+    VCR.use_cassette('google_cells/spreadsheet/list') do |c|
       s = GoogleCells::Spreadsheet.list.first
       w = s.worksheets.first
     end
@@ -32,8 +31,7 @@ describe GoogleCells::Worksheet do
   describe "#save" do
 
     it "tracks all changed cells" do
-      VCR.use_cassette('google_cells/spreadsheet/list', 
-        :decode_compressed_response => true) do |c|
+      VCR.use_cassette('google_cells/spreadsheet/list') do
         s = GoogleCells::Spreadsheet.list.first
         w = s.worksheets.first
         c = GoogleCells::Cell.new(:worksheet => w)
@@ -44,23 +42,23 @@ describe GoogleCells::Worksheet do
     end
 
     it "saves cells" do
-      VCR.use_cassette('google_cells/worksheet/save', 
-        :decode_compressed_response => true) do |c|
+      VCR.use_cassette('google_cells/worksheet/save') do
         s = GoogleCells::Spreadsheet.list.first
         w = s.worksheets.first
+        c = w.rows.first.cells.first
 
         c = GoogleCells::Cell.new(
-          :title=>"A1", 
-          :id=>"https://spreadsheets.google.com/feeds/cells/'+
-            't-9Bgdk4FJIM8BDqIDHpBCw/od6/private/full/R1C1", 
-          :value=>"", 
-          :numeric_value=>nil, 
-          :row=>1, 
-          :col=>1, 
-          :edit_url=>"https://spreadsheets.google.com/feeds/cells/'+
-            't-9Bgdk4FJIM8BDqIDHpBCw/od6/private/full/R1C1/bzwjv",
-          :input_value=> "a new name",
-          :worksheet => w
+          title: "A1", 
+          id: "https://spreadsheets.google.com/feeds/cells/" +
+            "t-9Bgdk4FJIM8BDqIDHpBCw/od6/private/full/R1C1", 
+          value: "", 
+          numeric_value: nil, 
+          row: 1, 
+          col: 1, 
+          edit_url: 'https://spreadsheets.google.com/feeds/cells/0ApTxW-'+
+            '6l0Ch_dHFyNHNwX0NjTHVIVk9ZS2duQ2ptUlE/od6/private/full/R1C1/1fvl7',
+          input_value:  "a new name",
+          worksheet: w
         )
         w.track_changes(c)
         w.save!.should be

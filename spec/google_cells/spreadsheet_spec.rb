@@ -1,14 +1,13 @@
 require 'spec_helper'
 
 describe GoogleCells::Spreadsheet do
-
-  let(:klass){subject.class}
+  
+  let(:klass){GoogleCells::Spreadsheet}
 
   it { should respond_to(:title) }
-  it { should respond_to(:id) }
+  it { should respond_to(:key) }
   it { should respond_to(:updated_at) }
   it { should respond_to(:author) }
-  it { should respond_to(:worksheets_uri) }
 
   describe ".share" do
 
@@ -16,132 +15,157 @@ describe GoogleCells::Spreadsheet do
 
     it "creates a new permission for the passed args" do
       klass.should_receive(:request).with(:post, "https://www.googleapis.com" + 
-        "/drive/v2/files/myspreadsheetkey/permissions", {:body=>"{\"role\":\"" + 
-        "owner\",\"type\":\"user\",\"value\":\"me@me.com\"}", :url_params=>{},
+        "/drive/v2/files/0AsfWTr-e4bf1dFVFRWtuSFJWTm1XeWhRdUt2MWwtQnc/"+
+        "permissions", {:body=>"{\"role\":\"" + "owner\",\"type\":\"user\"" + 
+        ",\"value\":\"me@me.com\"}", :url_params=>{},
         :headers=>{"Content-Type"=>"application/json"}})
-      klass.share('myspreadsheetkey', body)
+      klass.share('0AsfWTr-e4bf1dFVFRWtuSFJWTm1XeWhRdUt2MWwtQnc', body)
     end
   end
 
   describe ".copy" do
 
-    it "returns a new spreadsheet object" do
-      VCR.use_cassette('google_cells/spreadsheet/copy', 
-        :decode_compressed_response => true) do |c|
-        s = GoogleCells::Spreadsheet.list.first
-        c = klass.copy(s.key)
-        s.key.should_not eq c.key
-        s.title.should eq c.title
-        svals = s.worksheets[0].rows.first.cells.map(&:value)
-        cvals = c.worksheets[0].rows.first.cells.map(&:value)
-        svals.should eq cvals
+    before(:each) do
+      @s, @c = nil
+      VCR.use_cassette('google_cells/spreadsheet/copy') do
+        @s = GoogleCells::Spreadsheet.list.first
+        @c = klass.copy(s.key)
       end
     end
+    let(:s){ @s }
 
-    it "optionally assigns a folder key" do
-      VCR.use_cassette('google_cells/spreadsheet/copy/folder', 
-        :decode_compressed_response => true) do |c|
-        fkey = 'parentid'
-        s = GoogleCells::Spreadsheet.list.first
-        c = klass.copy(s.key, folder_key:fkey)
-        c.folders.count.should eq 1
-        c.folders.first.key.should be
+    context "new copy" do
+      subject{ @c }
+
+      its(:key){ should_not eq s.key }
+      its(:title){ should eq s.title }
+
+      it "should have same content" do
+        VCR.use_cassette('google_cells/spreadsheet/copy/content') do
+          svals = s.worksheets[0].rows.first.cells.map(&:value)
+          cvals = @c.worksheets[0].rows.first.cells.map(&:value)
+          svals.should eq cvals
+        end
       end
     end
   end
 
   describe ".list" do
 
-    it "returns a list of Google Spreadsheets" do
-      objs = nil
-      VCR.use_cassette('google_cells/spreadsheet', 
-        :decode_compressed_response => true) do |c|
-        objs = klass.list
+    before(:each) do
+      @list = []
+      VCR.use_cassette('google_cells/spreadsheet/list') do |c|
+        @list = klass.list
       end
-      objs.count.should eq 1
-      s = objs.first
-      s.title.should eq "Businesses"
-      s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/' + 
-        'private/full/myspreadsheetkey'
-      s.updated_at.should eq '2014-01-31T20:37:14.168Z'
-      s.key.should eq 'myspreadsheetkey'
+    end
+    let(:list){ @list }
 
-      a = s.author
-      a.name.should eq 'jessica'
-      a.email.should eq 'myemail@mydomain.com'
+    it "returns a list" do
+      list.count.should eq 3
+    end
+
+    it "returns spreadsheet objects" do
+      list.each{|s| s.class.should eq subject.class }
+    end
+
+    context "loading new spreadsheets correcty" do
+      subject {list.first}
+
+      its(:title){ should eq "My Spreadsheet" }
+      its(:updated_at){ should eq '2014-02-23T04:52:51.908Z' }
+      its(:key){ should eq '0ApTxW-6l0Ch_dHFyNHNwX0NjTHVIVk9ZS2duQ2ptUlE' }
+
+      context "author" do
+        subject {list.first.author}
+
+        its(:name){ should eq '194578754295' }
+        its(:email){ should eq '194578754295@developer.gserviceaccount.com' }
+      end
     end
   end
 
   describe ".get" do
 
-    it "retrieves a google spreadsheet by id" do
-      s = nil
-      VCR.use_cassette('google_cells/spreadsheet/get', 
-        :decode_compressed_response => true) do |c|
-        s = klass.get('myspreadsheetkey')
+    before(:each) do
+      @s = nil
+      VCR.use_cassette('google_cells/spreadsheet/get') do
+        @s = klass.get('0AsfWTr-e4bf1dFVFRWtuSFJWTm1XeWhRdUt2MWwtQnc')
       end
-      s.class.should eq klass
-      s.title.should eq 'Contacts'
-      s.id.should eq 'https://spreadsheets.google.com/feeds/spreadsheets/' + 
-        'private/full/myspreadsheetkey'
-      s.updated_at.should eq '2014-02-16T15:45:40.723Z'
-      s.author.name.should eq '544558148459'
-      s.author.email.should eq 'mysvcaccount@gmail.com'
+    end
+    subject{ @s }
+
+    its(:class){ should eq klass }
+    its(:title){ should eq 'My Spreadsheet' }
+    its(:updated_at){ should eq '2014-02-23T02:25:18.152Z' }
+
+    context "author" do
+      subject{ @s.author }
+      its(:name){ should eq '194578754295' }
+#      its(:email){ should eq '194578754295@developer.gserviceaccount.com' }
     end
   end
 
   describe "#enfold" do
 
-    it "adds a folder for self" do
-      VCR.use_cassette('google_cells/spreadsheet/enfold', 
-        :decode_compressed_response => true) do |c|
-        s = GoogleCells::Spreadsheet.list.first
-        s.instance_variable_set(:@folders, [])
-        s.enfold('folderid').should be
-        folders = s.instance_variable_get(:@folders)
-        folders.count.should eq 1
-        folders.first.key.should eq 'folderid'
+    before(:each) do
+      @s = nil
+      VCR.use_cassette('google_cells/spreadsheet/enfold') do
+        @s = GoogleCells::Spreadsheet.list.first
+        @s.instance_variable_set(:@folders, [])
+        @s.enfold('0B5TxW-6l0Ch_elJwQlVMaGcwTjA')
+      end
+    end
+    
+    context "folders" do
+      subject{ @s.instance_variable_get(:@folders) }
+      its(:count){ should eq 1 }
+
+      it "sets key" do
+        subject.first.key.should eq '0B5TxW-6l0Ch_elJwQlVMaGcwTjA'
       end
     end
   end
 
   describe "#folders" do
 
-    it "retrieves folder information for doc" do
-      VCR.use_cassette('google_cells/spreadsheet/folders', 
-        :decode_compressed_response => true) do |c|
-        s = GoogleCells::Spreadsheet.list.first
-        s.folders.count.should eq 1
-        f = s.folders.first
-        f.class.should eq GoogleCells::Folder
-        f.key.should eq 'parentid'
+    before(:each) do
+      @s = nil
+      VCR.use_cassette('google_cells/spreadsheet/folders') do
+        @s = GoogleCells::Spreadsheet.list.first
+        @s.folders
       end
+    end
+    it{ @s.folders.count.should eq 1 }
+
+    context "folders" do
+      subject{ @s.folders.first }
+
+      its(:class){ should eq GoogleCells::Folder }
+      its(:key){ should eq '0AJTxW-6l0Ch_Uk9PVA' }
     end
   end
 
   describe "#worksheets" do
 
-    it "returns a list of Google worksheets" do
-      spreadsheet = nil
-      VCR.use_cassette('google_cells/spreadsheet', 
-        :decode_compressed_response => true) do |c|
-        spreadsheet = klass.list.first
+    before(:each) do
+      @s = nil
+      VCR.use_cassette('google_cells/spreadsheet/worksheets') do
+        @s = klass.list.first
+        @s.worksheets.count.should eq 1
       end
-      VCR.use_cassette('google_cells/worksheets', 
-        :decode_compressed_response => true) do
-        spreadsheet.worksheets
-      end
-      spreadsheet.worksheets.count.should eq 2
-      w = spreadsheet.worksheets.first
-      w.title.should eq 'Businesses'
-      w.updated_at.should eq '2014-01-31T20:37:14.168Z'
-      w.cells_uri.should eq 'https://spreadsheets.google.com/feeds/cells/' +
-        'myspreadsheetkey/od6/private/full'
-      w.lists_uri.should eq 'https://spreadsheets.google.com/feeds/list/' + 
-        'myspreadsheetkey/od6/private/full'
-      w.row_count.should eq 100
-      w.col_count.should eq 23
-      w.spreadsheet.should eq spreadsheet
+    end
+    context "worksheets" do
+      subject{ @s.worksheets.first }
+      
+      its(:title){ should eq 'Sheet1' }
+      its(:updated_at){ should eq '2014-02-23T02:25:18.152Z' }
+      its(:cells_uri){ should eq 'https://spreadsheets.google.com/feeds/'+
+        'cells/0ApTxW-6l0Ch_dHFyNHNwX0NjTHVIVk9ZS2duQ2ptUlE/od6/private/full' }
+      its(:lists_uri){ should eq 'https://spreadsheets.google.com/feeds/'+
+        'list/0ApTxW-6l0Ch_dHFyNHNwX0NjTHVIVk9ZS2duQ2ptUlE/od6/private/full' }
+      its(:row_count){ should eq 100 }
+      its(:col_count){ should eq 18 }
+      its(:spreadsheet){ should eq @s }
     end
   end
 end

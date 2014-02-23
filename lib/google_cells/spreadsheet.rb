@@ -30,14 +30,13 @@ module GoogleCells
       end
 
       def copy(key, opts={})
-        url = "https://www.googleapis.com/drive/v2/files/#{key}/copy"
         params = {}
         if !opts[:writers_can_share].to_s.empty?
           params[:body] = {'writersCanShare' => opts.delete(:writers_can_share)
             }.to_json
           params[:headers] = {'Content-Type' => 'application/json'}
         end
-        res = request(:post, url, params)
+        res = request(:post, copy_uri(key), params)
         s = get(res.data['id'])
       end
 
@@ -56,8 +55,8 @@ module GoogleCells
           :email_message) if params[:email_message]
 
         params[:headers] = {'Content-Type' => 'application/json'}
-        url = "https://www.googleapis.com/drive/v2/files/#{key}/permissions"
-        res = request(:post, url, params)
+        
+        res = request(:post, permissions_uri(key), params)
         true
       end
     end
@@ -72,19 +71,16 @@ module GoogleCells
     
     def enfold(folder_key)
       return true if @folders && @folders.select{|f| f.key == folder_key}.first
-      uri = "https://www.googleapis.com/drive/v2/files/#{folder_key}/children"
       body = {'id' => self.key}.to_json
-      res = self.class.request(:post, uri, :body => body, :headers => 
-        {'Content-Type' => 'application/json'})
+      res = self.class.request(:post, self.class.folder_uri(folder_key), 
+        :body => body, :headers => {'Content-Type' => 'application/json'})
       @folders << Folder.new(spreadsheet:self, key:folder_key) if @folders
       true
     end
 
     def folders
       return @folders if @folders
-      # for metadata/folder info, need google drive api record
-      uri = "https://www.googleapis.com/drive/v2/files/#{self.key}"
-      res = self.class.request(:get, uri)
+      res = self.class.request(:get, self.class.file_uri(key))
       data = JSON.parse(res.body)
       return @folders = [] if data['parents'].nil?
       @folders = data['parents'].map do |f|

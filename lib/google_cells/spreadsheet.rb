@@ -61,7 +61,7 @@ module GoogleCells
       end
 
       def delete(key)
-        self.class.request(:delete, file_uri(key))
+        request(:delete, file_uri(key))
       end
     end
 

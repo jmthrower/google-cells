@@ -1,3 +1,6 @@
+Version 0.1.1
+=========================
+
 + Fixed bug in Spreadsheet.delete  
 + Fixed rake default task to run specs  
 

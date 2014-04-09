@@ -59,6 +59,14 @@ module GoogleCells
         res = request(:post, permissions_uri(key), params)
         true
       end
+
+      def delete(key)
+        self.class.request(:delete, file_uri(key))
+      end
+    end
+
+    def delete
+      self.class.delete(self.key)
     end
 
     def share(params)

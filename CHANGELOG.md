@@ -1,3 +1,5 @@
++ Fixed rake default task to run specs  
+
 Version 0.1.0
 =========================
 

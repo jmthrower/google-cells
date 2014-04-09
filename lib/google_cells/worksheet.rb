@@ -13,12 +13,25 @@ module GoogleCells
       GoogleCells::CellSelector::RowSelector.new(self)
     end
 
+    class UpdateError < StandardError ; end
 
     def save!
       return if @changed_cells.nil? || @changed_cells.empty?
       batch_url = concat_url(cells_uri, "/batch")
-      request(:post, batch_url, body: to_xml, headers:{
+      response = request(:post, batch_url, body: to_xml, headers:{
         "Content-Type" => "application/atom+xml"})
+      doc = Nokogiri.parse(response.body)
+
+      for entry in doc.css("atom|entry")
+        interrupted = entry.css("batch|interrupted")[0]
+        if interrupted
+          raise(UpdateError, "Update failed: %s" % interrupted["reason"])
+        end
+        if !(entry.css("batch|status").first["code"] =~ /^2/)
+          raise(UpdateError, "Update failed for cell %s: %s" %
+            [entry.css("atom|id").text, entry.css("batch|status")[0]["reason"]])
+        end
+      end
       @changed_cells = {}
       true
     end

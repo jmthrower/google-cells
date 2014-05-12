@@ -31,9 +31,15 @@ module GoogleCells
 
       def copy(key, opts={})
         params = {}
-        if !opts[:writers_can_share].to_s.empty?
-          params[:body] = {'writersCanShare' => opts.delete(:writers_can_share)
-            }.to_json
+        body = nil
+        { :writers_can_share => 'writersCanShare',
+          :title  => 'title' }.each do |sym,str|
+          next unless opts[sym]
+          body ||= {}
+          body[str] = opts.delete(sym)
+        end
+        if body
+          params[:body] = body.to_json
           params[:headers] = {'Content-Type' => 'application/json'}
         end
         res = request(:post, copy_uri(key), params)
@@ -83,6 +89,13 @@ module GoogleCells
       res = self.class.request(:post, self.class.folder_uri(folder_key), 
         :body => body, :headers => {'Content-Type' => 'application/json'})
       @folders << Folder.new(spreadsheet:self, key:folder_key) if @folders
+      true
+    end
+
+    def defold(folder_key)
+      klass = self.class
+      res = klass.request(:delete, klass.child_uri(folder_key, self.key))
+      @folders = nil
       true
     end
 

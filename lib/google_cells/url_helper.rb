@@ -18,6 +18,10 @@ module GoogleCells
       "https://www.googleapis.com/drive/v2/files/#{key}/children"
     end
 
+    def child_uri(folder_key, child_key)
+      "https://www.googleapis.com/drive/v2/files/#{folder_key}/children/#{child_key}"
+    end
+
     def file_uri(key)
       "https://www.googleapis.com/drive/v2/files/#{key}"
     end

@@ -1,3 +1,9 @@
+Version 0.2.0
+=========================
+
++ Added Spreadsheet#defold to remove from a folder
++ Added explicit title setting to Spreadsheet.copy
+
 Version 0.1.1
 =========================
 

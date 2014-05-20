@@ -19,7 +19,7 @@ module GoogleCells
       return if @changed_cells.nil? || @changed_cells.empty?
       batch_url = concat_url(cells_uri, "/batch")
       response = request(:post, batch_url, body: to_xml, headers:{
-        "Content-Type" => "application/atom+xml"})
+        "Content-Type" => "application/atom+xml", "If-Match" => "*"})
       doc = Nokogiri.parse(response.body)
 
       for entry in doc.css("atom|entry")

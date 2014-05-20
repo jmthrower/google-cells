@@ -1,3 +1,6 @@
+Version 0.2.1
+=========================
+
 + Added if-match header to update for new Google sheets compatibility  
   Fixes [GH#2](https://github.com/pikimal/google-cells/issues/2)
 

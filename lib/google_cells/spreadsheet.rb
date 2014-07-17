@@ -69,14 +69,42 @@ module GoogleCells
       def delete(key)
         request(:delete, file_uri(key))
       end
+
+      def unsubscribe(params)
+        body = {}
+        body['id'] = params.delete(:id) if params[:id]
+        body['resourceId'] = params.delete(:resource_id) if params[:resource_id]
+        drive = GoogleCells.client.discovered_api('drive', 'v2')
+        GoogleCells.client.execute!(
+          :api_method => drive.channels.stop,
+          :body_object => body )
+        true
+      end
+
+      def subscribe(key, params)
+        body = {"type" => "web_hook"}
+        [:id, :address, :token, :expiration, :type].each do |sym|
+          body[sym.to_s] = params.delete(sym) if params[sym]
+        end
+        drive = GoogleCells.client.discovered_api('drive', 'v2')
+        res = GoogleCells.client.execute!(
+          :api_method => drive.files.watch,
+          :body_object => body,
+          :parameters => { 'fileId' => key })
+        res.data['resourceId']
+      end
+    end
+
+    %w( subscribe share ).each do |m|
+      define_method(m){|args| self.class.send(m, self.key, args) }
+    end
+
+    def unsubscribe(params)
+      self.class.unsubscribe(params)
     end
 
     def delete
       self.class.delete(self.key)
-    end
-
-    def share(params)
-      self.class.share(self.key, params)
     end
 
     def copy(opts={})

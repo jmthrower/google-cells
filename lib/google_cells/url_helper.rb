@@ -25,5 +25,13 @@ module GoogleCells
     def file_uri(key)
       "https://www.googleapis.com/drive/v2/files/#{key}"
     end
+
+    def watch_uri(key)
+      "https://www.googleapis.com/drive/v2/files/#{key}/watch"
+    end
+
+    def unwatch_uri
+      "https://www.googleapis.com/drive/v2/channels/stop"
+    end
   end
 end

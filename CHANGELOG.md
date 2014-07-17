@@ -1,3 +1,5 @@
++ Added Spreadsheet.subscribe and Spreadsheet.unsubscribe  
+
 Version 0.2.1
 =========================
 

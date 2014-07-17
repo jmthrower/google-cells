@@ -1,3 +1,6 @@
+Version 0.3.0
+=========================
+
 + Added Spreadsheet.subscribe and Spreadsheet.unsubscribe  
 
 Version 0.2.1

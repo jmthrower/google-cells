@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jmthrower@gmail.com"]
   spec.summary       = %q{Google Spreadsheets API wrapper}
   spec.description   = %q{An intuitive Google Spreadsheets API wrapper}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/jmthrower/google-cells"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

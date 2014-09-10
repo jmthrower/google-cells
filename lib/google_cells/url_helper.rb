@@ -33,5 +33,9 @@ module GoogleCells
     def unwatch_uri
       "https://www.googleapis.com/drive/v2/channels/stop"
     end
+
+    def revisions_uri(key)
+      "https://www.googleapis.com/drive/v2/files/#{key}/revisions"
+    end
   end
 end

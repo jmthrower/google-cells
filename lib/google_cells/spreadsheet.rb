@@ -32,8 +32,10 @@ module GoogleCells
       def get_last_modifying_user(key)
         res = request(:get, self.revisions_uri(key))
         revisions = JSON.parse(res.body)['items']
-        revisions.reject{|u| u['lastModifyingUser']['emailAddress'] =~ /gserviceaccount.com$/}
-          .last['lastModifyingUser']['displayName']
+        revisions = revisions.reject{|u| u['lastModifyingUser'].nil?}
+        revisions = revisions.reject{u['lastModifyingUser']['emailAddress'] =~ /gserviceaccount.com$/}
+        revisions = revisions.sort { |a,b| a['modifiedDate'] <=> b['modifiedDate'] }
+        revisions.empty? ? "*unknown*" : revisions.last['lastModifyingUser']['displayName']
       end
 
       def copy(key, opts={})

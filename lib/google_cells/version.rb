@@ -1,3 +1,3 @@
 module GoogleCells
-  VERSION = "0.3.1"
+  VERSION = "0.3.1.pre"
 end

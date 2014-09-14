@@ -29,6 +29,15 @@ module GoogleCells
         Spreadsheet.new(args)
       end
 
+      def get_last_modifying_user(key)
+        res = request(:get, self.revisions_uri(key))
+        revisions = JSON.parse(res.body)['items']
+        revisions = revisions.reject{|u| u['lastModifyingUser'].nil?}
+        revisions = revisions.reject{|u| u['lastModifyingUser']['emailAddress'] =~ /gserviceaccount.com$/}
+        revisions = revisions.sort { |a,b| a['modifiedDate'] <=> b['modifiedDate'] }
+        revisions.empty? ? "*unknown*" : revisions.last['lastModifyingUser']['displayName']
+      end
+
       def copy(key, opts={})
         params = {}
         body = nil
@@ -111,6 +120,10 @@ module GoogleCells
       self.class.copy(self.key, opts)
     end
     
+    def get_last_modifying_user
+      self.class.get_last_modifying_user(self.key)
+    end
+
     def enfold(folder_key)
       return true if @folders && @folders.select{|f| f.key == folder_key}.first
       body = {'id' => self.key}.to_json

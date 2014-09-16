@@ -1,3 +1,5 @@
++ Added Spreadsheet#get_last_modifying_user
+
 Version 0.3.0
 =========================
 

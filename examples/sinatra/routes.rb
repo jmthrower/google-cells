@@ -42,7 +42,29 @@ module App
         text << row.cells.map(&:value).join('</td><td>')
         text << "</td></tr>"
       end
+      text << "<form action=\"/spreadsheets/" + params[:spreadsheet_id] + 
+        "/worksheets/" + params[:worksheet_num] + "/scramble\" method=\"post\">"
+      text << "<button type=\"submit\">Scramble!</button>"
+      text << "</form>"
       erb text
+    end
+
+    post '/spreadsheets/:spreadsheet_id/worksheets/:worksheet_num/scramble' do
+      @spreadsheet = GoogleCells::Spreadsheet.get(params[:spreadsheet_id])
+      @worksheet = @spreadsheet.worksheets[params[:worksheet_num].to_i]
+      cached_array = @worksheet.rows.from(1).to(5).all.dup
+      @worksheet.rows.from(1).to(5).each do |row|
+        row.cells.each do |c|
+          scramble_row = cached_array[rand(cached_array.length)]
+          scramble_cell = scramble_row.cells[rand(scramble_row.cells.length)]
+          c.input_value = scramble_cell.value
+        end
+      end
+      @worksheet.save!
+
+      path = "/spreadsheets/" + params[:spreadsheet_id] + "/worksheets/" +
+        params[:worksheet_num].to_i.to_s
+      redirect to(path)
     end
   end
 end

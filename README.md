@@ -8,25 +8,39 @@ Add this line to your application's Gemfile:
 
     gem 'google_cells'
 
-And then execute:
+## Configuration
 
-    $ bundle
+Sign up for the Drive API in the [Google developer console](https://console.developers.google.com/project). 
 
-Or install it yourself as:
+__Oauth 2 Web Flow__
 
-    $ gem install google_cells
-
-## Usage
+For a web application using the oauth 2 web flow, configure GoogleCells with your client id and secret.
 
 ```ruby
-# configure with Google Service account keys
+GoogleCells.configure do |config|
+  config.client_id = 'my-client-id'
+  config.client_secret = 'my-client-secret'
+end
+```
+
+__Oauth 2 Service Account__
+
+For background processing using a service account, configure GoogleCells with your account email, path to your key file, and key secret.
+
+```ruby
 GoogleCells.configure do |config|
   config.service_account_email = 'my_service_account@email.here'
   config.key_file = File.dirname(__FILE__) + 
     '/path/to/private-key.file/from/Google'
   config.key_secret = 'notasecret'
 end
+```
 
+See "examples" directory for implementations of both the web flow and service account in sinatra. To use the examples, add config files with your auth info. to /tmp.
+
+## Usage
+
+```ruby
 # list all spreadsheets in account
 files = GoogleCells::Spreadsheet.list
 files.each do |s|

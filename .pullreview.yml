@@ -1,0 +1,11 @@
+---
+rules:
+  ignore:
+  - missing_class_documentation
+  - missing_method_documentation
+  - space_between_curly_brace_and_pipe_missing
+  - space_inside_closing_curly_brace_missing
+  - space_inside_opening_curly_brace_missing
+  - space_missing_after_hash_sign
+  - space_missing_inside_closing_curly_brace
+  - space_missing_inside_opening_curly_brace

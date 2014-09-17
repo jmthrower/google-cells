@@ -168,4 +168,22 @@ describe GoogleCells::Spreadsheet do
       its(:spreadsheet){ should eq @s }
     end
   end
+
+  describe "#revisions" do
+
+    before(:each) do
+      @s, @revisions = VCR.use_cassette('google_cells/revisions/list') do |c|
+        s = GoogleCells::Spreadsheet.get('1ZRAzPpO--MiXWcIbU_V7YdMlxNZ62hfp4U2HYjis1ls')
+        [ s, s.revisions ]
+      end
+    end
+
+    it "returns a list of revisions" do
+      @revisions.each{|r| r.class.should eq GoogleCells::Revision}
+    end
+
+    it "assigns self as spreadsheet" do
+      @revisions.first.spreadsheet.should eq @s
+    end
+  end
 end

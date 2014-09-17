@@ -48,23 +48,28 @@ module GoogleCells
         cells = []
         each_entry(worksheet.cells_uri, 'return-empty' => 'true', 
           'min-row' => start.to_s, 'max-row' => last.to_s) do |entry|
-          gscell = entry.css("gs|cell")[0]
-          cell = Cell.new(
-            id: entry.css("id").text,
-            title: entry.css("title").text,
-            value: gscell.inner_text,
-            row: gscell["row"].to_i,
-            col: gscell["col"].to_i,
-            edit_url: entry.css("link[rel='edit']")[0]["href"],
-            input_value: gscell["inputValue"],
-            numeric_value: gscell["numericValue"],
-            worksheet: self.worksheet
-          )
+          args = parse_from_entry(entry)
+          cell = Cell.new(args)
           cells[cell.row - start] ||= []
           cells[cell.row - start][cell.col - 1] = cell
         end
         cells
       end
+    end
+
+    def parse_from_entry(entry)
+      gscell = entry.css("gs|cell")[0]
+      {
+        id: entry.css("id").text,
+        title: entry.css("title").text,
+        value: gscell.inner_text,
+        row: gscell["row"].to_i,
+        col: gscell["col"].to_i,
+        edit_url: entry.css("link[rel='edit']")[0]["href"],
+        input_value: gscell["inputValue"],
+        numeric_value: gscell["numericValue"],
+        worksheet: self.worksheet
+      }
     end
   end
 end

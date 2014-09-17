@@ -175,8 +175,9 @@ module GoogleCells
     private
 
     def self.parse_from_entry(entry, key=nil)
-      key ||= entry.css("link").select{|el| el['rel'] == 'alternate'}.
-        first['href'][/key=.+/][4..-1]
+      url ||= entry.css("link").select{|el| el['rel'] == 'alternate'}.
+        first['href']
+      key =  url[/key=.+/] ? url[/key=.+/][4..-1] : url[/[^\/]{44}/]
       { title: entry.css("title").first.text,
         key: key,
         updated_at: entry.css("updated").first.text,

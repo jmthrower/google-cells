@@ -1,3 +1,4 @@
++ Added pages to sinatra web flow example
 + Added Spreadsheet#get_last_modifying_user
 
 Version 0.3.0

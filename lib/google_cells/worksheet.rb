@@ -13,8 +13,6 @@ module GoogleCells
       GoogleCells::CellSelector::RowSelector.new(self)
     end
 
-    class UpdateError < StandardError ; end
-
     def save!
       return if @changed_cells.nil? || @changed_cells.empty?
       batch_url = concat_url(cells_uri, "/batch")
@@ -22,16 +20,7 @@ module GoogleCells
         "Content-Type" => "application/atom+xml", "If-Match" => "*"})
       doc = Nokogiri.parse(response.body)
 
-      for entry in doc.css("atom|entry")
-        interrupted = entry.css("batch|interrupted")[0]
-        if interrupted
-          raise(UpdateError, "Update failed: %s" % interrupted["reason"])
-        end
-        if !(entry.css("batch|status").first["code"] =~ /^2/)
-          raise(UpdateError, "Update failed for cell %s: %s" %
-            [entry.css("atom|id").text, entry.css("batch|status")[0]["reason"]])
-        end
-      end
+      doc.css("atom|entry").each{|entry| check_entry_for_errors!(entry) }
       @changed_cells = {}
       true
     end
@@ -43,6 +32,24 @@ module GoogleCells
     end
 
     private
+
+    class UpdateError < StandardError ; end
+
+    def check_entry_for_errors!(entry)
+      check_for_batch_error!(entry)
+      check_for_cell_error!(entry)
+    end
+
+    def check_for_batch_error!(entry)
+      return unless entry.css("batch|interrupted")[0]
+      raise UpdateError, "Update failed: #{interrupted["reason"]}"
+    end
+
+    def check_for_cell_error!(entry)
+      return if (entry.css("batch|status").first["code"] =~ /^2/)
+      raise UpdateError, "Update failed for cell #{entry.css("atom|id").text
+        }: #{entry.css("batch|status").first["reason"]}"
+    end
 
     def to_xml
       xml = <<-EOS

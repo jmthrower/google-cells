@@ -2,6 +2,7 @@ require 'sinatra/base'
 
 module App
   class Routes < ::Sinatra::Base
+
     get '/' do
       @spreadsheets = GoogleCells::Spreadsheet.list
       @spreadsheets.sort_by!{|s| s.updated_at}
@@ -19,19 +20,37 @@ module App
     end
 
     get '/spreadsheets/:spreadsheet_id' do
+      _load_spreadsheet
       @spreadsheet = GoogleCells::Spreadsheet.get(params[:spreadsheet_id])
       text = "<h1>Spreadsheet: #{@spreadsheet.title}</h1>"
-      @spreadsheet.worksheets.each_with_index do |ws, index|
-        text << "Worksheet #{index}: "
-        text << "<a href=\"/spreadsheets/#{@spreadsheet.key}/worksheets/#{index}\">"
-        text << ws.title
-        text << "</a>"
+      worksheets = @spreadsheet.worksheets
+      worksheets.each_with_index do |ws, i|
+        text << "<b>Worksheet #{i}</b>"
+        text << "<br/><a href=\"/spreadsheets/#{@spreadsheet.key}/worksheets/#{i
+          }\">#{ws.title}</a>"
+        text << "<br/><a href=\"/spreadsheets/#{@spreadsheet.key}/revisions\">"+
+          "Revisions</a>"
+      end
+      erb text
+    end
+
+    get "/spreadsheets/:spreadsheet_id/revisions" do
+      _load_spreadsheet
+      text = "<h1>#{@spreadsheet.title}</h1>"
+      @spreadsheet.revisions.each do |r|
+        text << "Revision ##{r.id}"
+        text << "<ul>"
+        text << "<li>Updated: #{r.updated_at}</li>"
+        text << "<li>Etag: #{r.etag}</li>"
+        text << "<li>Author name: #{r.author.name}</li>"
+        text << "<li>Author email: #{r.author.email}</li>"
+        text << "</ul>"
       end
       erb text
     end
 
     get '/spreadsheets/:spreadsheet_id/worksheets/:worksheet_num' do
-      @spreadsheet = GoogleCells::Spreadsheet.get(params[:spreadsheet_id])
+      _load_spreadsheet
       @worksheet = @spreadsheet.worksheets[params[:worksheet_num].to_i]
       text = "<style>table td{ border-style:solid; border-width:1px;}</style>"
       text << "<h1>#{@spreadsheet.title}</h1>"
@@ -50,7 +69,7 @@ module App
     end
 
     post '/spreadsheets/:spreadsheet_id/worksheets/:worksheet_num/scramble' do
-      @spreadsheet = GoogleCells::Spreadsheet.get(params[:spreadsheet_id])
+      _load_spreadsheet
       @worksheet = @spreadsheet.worksheets[params[:worksheet_num].to_i]
       cached_array = @worksheet.rows.from(1).to(5).all.dup
       @worksheet.rows.from(1).to(5).each do |row|
@@ -65,6 +84,12 @@ module App
       path = "/spreadsheets/" + params[:spreadsheet_id] + "/worksheets/" +
         params[:worksheet_num].to_i.to_s
       redirect to(path)
+    end
+
+    private
+
+    def _load_spreadsheet
+      @spreadsheet = GoogleCells::Spreadsheet.get(params[:spreadsheet_id])
     end
   end
 end

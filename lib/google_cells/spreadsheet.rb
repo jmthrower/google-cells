@@ -108,6 +108,10 @@ module GoogleCells
       define_method(m){|args| self.class.send(m, self.key, args) }
     end
 
+    %w( worksheets_uri revisions_uri ).each do |m|
+      define_method(m){ self.class.send(m, self.key) }
+    end
+
     def unsubscribe(params)
       self.class.unsubscribe(params)
     end
@@ -172,6 +176,13 @@ module GoogleCells
       return @worksheets
     end
 
+    def revisions
+      @revisions ||= Revision.list(self.key).map do |r|
+        r.instance_variable_set(:@spreadsheet, self)
+        r
+      end
+    end
+
     private
 
     def self.parse_from_entry(entry, key=nil)
@@ -187,7 +198,5 @@ module GoogleCells
         )
       }
     end
-
-    def worksheets_uri; self.class.worksheets_uri(key); end
   end
 end

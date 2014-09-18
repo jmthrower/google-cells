@@ -13,6 +13,7 @@ require "google_cells/folder"
 require "google_cells/row"
 require "google_cells/spreadsheet"
 require "google_cells/worksheet"
+require "google_cells/revision"
 require "google_cells/version"
 
 module GoogleCells

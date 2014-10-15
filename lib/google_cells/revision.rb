@@ -29,7 +29,7 @@ module GoogleCells
     def self.parse_from_entry(entry)
       author = entry['lastModifyingUser']
       { id: entry['id'],
-        updated_at: entry['modifiedDate'],
+        updated_at: Time.parse(entry['modifiedDate']),
         etag: entry['etag'],
         author: (author.nil? ? nil : Author.new(
           name: author['displayName'],

@@ -1,3 +1,5 @@
++ Don't get a new access token on each request if we already have one.
+
 Version 0.4.0
 =========================
 

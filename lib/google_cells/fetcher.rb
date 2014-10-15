@@ -15,7 +15,9 @@ module GoogleCells
         url << '?' unless url[-1] == "?"
         url << params[:url_params].to_a.map{|k,v| "#{k}=#{v}"}.join('&')
       end
-      GoogleCells.client.authorization.fetch_access_token!
+
+      authorize
+      
       GoogleCells.client.execute!(
         :http_method => method,
         :uri => url,
@@ -23,5 +25,18 @@ module GoogleCells
         :body => params[:body]
       ) 
     end
+
+    def authorize
+      if !auth.access_token || auth.expired?
+        GoogleCells.client.authorization.fetch_access_token!
+      end
+    end
+
+    private
+
+    def auth
+      GoogleCells.client.authorization
+    end
+
   end
 end

@@ -26,7 +26,7 @@ describe GoogleCells::Revision do
       r = revisions.last
       r.id.should eq "22"
       r.etag.should be
-      r.updated_at.should be
+      r.updated_at.should be_a Time
       r.spreadsheet_key.should be
     end
 
